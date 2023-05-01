@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "pdfjs-dist": "^3.5.141"
+  },
+  "scripts":{
+	"build": "cp node_modules/pdfjs-dist/build/pdf.min.js js/pdfjs && cp node_modules/pdfjs-dist/build/pdf.worker.min.js js/pdfjs"
+  }
+}
