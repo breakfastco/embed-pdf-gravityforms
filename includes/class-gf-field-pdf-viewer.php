@@ -123,14 +123,43 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			'url_pdf'    => $url,
 		) ) );
 
+		//TODO minimize this in the build script
+		// Load the viewer script.
+		wp_enqueue_script(
+			$handle . '-viewer',
+			plugins_url( 'js/pdfjs/pdf_viewer.js', EMBED_PDF_GRAVITYFORMS_PATH ),
+			$handle,
+			EMBED_PDF_GRAVITYFORMS_VERSION,
+			true
+		);
+
 		$canvas_id = sprintf(
 			'field_%s_%s_embed_pdf_gravityforms',
 			$form['id'],
 			$this->id
 		);
 
+		// TODO minimize this in the build script
+		wp_enqueue_style(
+			$handle,
+			plugins_url( 'css/pdf_viewer.css', EMBED_PDF_GRAVITYFORMS_PATH ),
+			array(),
+			EMBED_PDF_GRAVITYFORMS_VERSION
+		);
+
 		//TODO Only load this thing once if there are 3 on the page.
 		return '<canvas id="' . esc_attr( $canvas_id ) . '"></canvas>'
+
+		. '<style type="text/css">
+		#' . esc_attr( $canvas_id ) . '_viewer_container {
+			overflow: auto;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+		  }
+		  </style>'
+
+		. '<div id="' . esc_attr( $canvas_id ) . '_viewer_container"><div id="' . esc_attr( $canvas_id ) . '_viewer" class="pdfViewer"></div></div>'
 
 		. "
 		<script type=\"text/javascript\">
@@ -138,14 +167,59 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			// The workerSrc property shall be specified.
 			pdfjsLib.GlobalWorkerOptions.workerSrc = epgf.url_worker;
 
+			// Build a viewer
+const container = document.getElementById(\"" . esc_attr( $canvas_id ) . "_viewer_container\");
+
+const eventBus = new pdfjsViewer.EventBus();
+
+// (Optionally) enable hyperlinks within PDF files.
+// const pdfLinkService = new pdfjsViewer.PDFLinkService({
+//   eventBus,
+// });
+
+// (Optionally) enable find controller.
+// const pdfFindController = new pdfjsViewer.PDFFindController({
+//   eventBus,
+//   linkService: pdfLinkService,
+// });
+
+// (Optionally) enable scripting support.
+// const pdfScriptingManager = new pdfjsViewer.PDFScriptingManager({
+//   eventBus,
+//   sandboxBundleSrc: SANDBOX_BUNDLE_SRC,
+// });
+
+const pdfViewer = new pdfjsViewer.PDFViewer({
+  container,
+  eventBus,
+  //linkService: pdfLinkService,
+  //findController: pdfFindController,
+  //scriptingManager: pdfScriptingManager,
+});
+//pdfLinkService.setViewer(pdfViewer);
+//pdfScriptingManager.setViewer(pdfViewer);
+
+eventBus.on('pagesinit', function () {
+  // We can use pdfViewer now, e.g. let's change default scale.
+  pdfViewer.currentScaleValue = 'page-width';
+
+  // We can try searching for things.
+  //if (SEARCH_FOR) {
+  //  eventBus.dispatch('find', { type: '', query: SEARCH_FOR });
+  //}
+});
+
 			// Asynchronous download PDF
 			const loadingTask = pdfjsLib.getDocument({ url: epgf.url_pdf, verbosity: 0 });
 			(async () => {
-				const pdf = await loadingTask.promise;
+				const pdfDocument = await loadingTask.promise;
+				// Load it into the viewer
+				pdfViewer.setDocument(pdfDocument);
+
 				//
 				// Fetch the first page
 				//
-				const page = await pdf.getPage(1);
+				const page = await pdfDocument.getPage(1);
 				const scale = 1.5;
 				const viewport = page.getViewport({ scale });
 				// Support HiDPI-screens.
