@@ -99,7 +99,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	 * @return void
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
-		// Need this JavaScript file or the viewer does not work.
+		// Need this JavaScript file or we can't load PDFs.
 		$handle = 'embed-pdf-gravityforms-pdfjs';
 		wp_enqueue_script(
 			$handle,
@@ -162,17 +162,17 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				canvas.style.width = Math.floor(viewport.width) + \"px\";
 				canvas.style.height = Math.floor(viewport.height) + \"px\";
 
-				const transform = outputScale !== 1 
-				? [outputScale, 0, 0, outputScale, 0, 0] 
-				: null;
+				const transform = outputScale !== 1
+					? [outputScale, 0, 0, outputScale, 0, 0]
+					: null;
 
 				//
 				// Render PDF page into canvas context
 				//
 				const renderContext = {
-				canvasContext: context,
-				transform,
-				viewport,
+					canvasContext: context,
+					transform,
+					viewport,
 				};
 				page.render(renderContext);
 			})();
