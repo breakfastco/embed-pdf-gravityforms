@@ -99,8 +99,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	 * @return void
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
-
-		//TODO do we have a PDF to display?
+		// Need this JavaScript file or the viewer does not work.
 		$handle = 'embed-pdf-gravityforms-pdfjs';
 		wp_enqueue_script(
 			$handle,
@@ -138,7 +137,6 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			pdfjsLib.GlobalWorkerOptions.workerSrc =
 				'https://breakfastco.test/wp-content/plugins/embed-pdf-gravityforms/js/pdfjs/pdf.worker.min.js';
 
-			//
 			// Asynchronous download PDF
 			//
 			const loadingTask = pdfjsLib.getDocument(url);
