@@ -108,38 +108,38 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			EMBED_PDF_GRAVITYFORMS_VERSION,
 			true
 		);
-		wp_enqueue_script(
-			'embed-pdf-gravityforms-pdfjs-worker',
-			plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ),
-			array( $handle ),
-			EMBED_PDF_GRAVITYFORMS_VERSION,
-			true
+
+		$url = 'https://breakfastco.test/wp-content/uploads/vscode-keyboard-shortcuts-macos.pdf';
+		// Do we have a PDF URL or path via Dynamic Population?
+		if ( ! empty( $value ) ) {
+			// Is the populated value a URL?
+			if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
+				// Yes.
+				$url = esc_url( $value );
+			}
+		}
+		wp_add_inline_script( $handle, 'const epgf = ' . wp_json_encode( array(
+			'url_worker' => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ),
+			'url_pdf'    => $url,
+		) ) );
+
+		$canvas_id = sprintf(
+			'field_%s_%s_embed_pdf_gravityforms',
+			$form['id'],
+			$this->id
 		);
 
-		// TODO Create "From a URL" setting.
-		//$pdf_url = '';
-
-		// TODO Allow more than one of these on a page.
-		return '<canvas id="embed-pdf-gravityforms"></canvas>'
+		//TODO Only load this thing once if there are 3 on the page.
+		return '<canvas id="' . esc_attr( $canvas_id ) . '"></canvas>'
 
 		. "
 		<script type=\"text/javascript\">
 		window.addEventListener( 'load', function () {
-			//
-			// If absolute URL from the remote server is provided, configure the CORS
-			// header on that server.
-			//
-			const url = 'https://breakfastco.test/wp-content/uploads/vscode-keyboard-shortcuts-macos.pdf';
-
-			//
 			// The workerSrc property shall be specified.
-			//
-			pdfjsLib.GlobalWorkerOptions.workerSrc =
-				'https://breakfastco.test/wp-content/plugins/embed-pdf-gravityforms/js/pdfjs/pdf.worker.min.js';
+			pdfjsLib.GlobalWorkerOptions.workerSrc = epgf.url_worker;
 
 			// Asynchronous download PDF
-			//
-			const loadingTask = pdfjsLib.getDocument(url);
+			const loadingTask = pdfjsLib.getDocument({ url: epgf.url_pdf, verbosity: 0 });
 			(async () => {
 				const pdf = await loadingTask.promise;
 				//
@@ -154,7 +154,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				//
 				// Prepare canvas using PDF page dimensions
 				//
-				const canvas = document.getElementById(\"embed-pdf-gravityforms\");
+				const canvas = document.getElementById(\"$canvas_id\");
 				const context = canvas.getContext(\"2d\");
 
 				canvas.width = Math.floor(viewport.width * outputScale);
