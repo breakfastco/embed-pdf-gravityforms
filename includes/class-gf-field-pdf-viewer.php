@@ -198,7 +198,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			esc_html__( 'PDF Viewer', 'embed-pdf-gravityforms' ),
 			esc_html__( 'This is a content placeholder. PDFs are not displayed in the form admin. Preview this form to view the content.', 'embed-pdf-gravityforms' )
 		);
-		return ! $is_admin ? '{FIELD}' : $field_content;
+		return ! is_admin() ? '{FIELD}' : $field_content;
 	}
 }
 GF_Fields::register( new GF_Field_PDF_Viewer() );
