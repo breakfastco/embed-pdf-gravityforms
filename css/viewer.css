@@ -1,0 +1,11 @@
+div.epgf-container{
+	overflow: auto; /* Allow scolling to see PDFs larger than the display viewport */
+}
+canvas.epgf{
+	width: auto;
+}
+/*@media (max-width: 480px) {
+	canvas.epgf{
+		width: auto;
+	}
+}*/

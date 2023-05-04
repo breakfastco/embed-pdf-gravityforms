@@ -103,7 +103,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		$handle = 'embed-pdf-gravityforms-pdfjs';
 		wp_enqueue_script(
 			$handle,
-			plugins_url( 'js/pdfjs/pdf.min.js', EMBED_PDF_GRAVITYFORMS_PATH ),
+			plugins_url( "js/pdfjs/pdf.min.js", EMBED_PDF_GRAVITYFORMS_PATH ),
 			array(),
 			EMBED_PDF_GRAVITYFORMS_VERSION,
 			true
@@ -118,19 +118,18 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				$url = esc_url( $value );
 			}
 		}
+		//TODO url_pdf should be an array of field IDs and PDF urls for 2 on one page
 		wp_add_inline_script( $handle, 'const epgf = ' . wp_json_encode( array(
 			'url_worker' => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ),
 			'url_pdf'    => $url,
 		) ) );
 
-		//TODO minimize this in the build script
-		// Load the viewer script.
-		wp_enqueue_script(
-			$handle . '-viewer',
-			plugins_url( 'js/pdfjs/pdf_viewer.js', EMBED_PDF_GRAVITYFORMS_PATH ),
-			$handle,
-			EMBED_PDF_GRAVITYFORMS_VERSION,
-			true
+		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		wp_enqueue_style(
+			'embed-pdf-gravityforms-field',
+			plugins_url( "css/viewer$min.css", EMBED_PDF_GRAVITYFORMS_PATH ),
+			array(),
+			EMBED_PDF_GRAVITYFORMS_VERSION
 		);
 
 		$canvas_id = sprintf(
@@ -139,118 +138,174 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			$this->id
 		);
 
-		// TODO minimize this in the build script
-		wp_enqueue_style(
-			$handle,
-			plugins_url( 'css/pdf_viewer.css', EMBED_PDF_GRAVITYFORMS_PATH ),
-			array(),
-			EMBED_PDF_GRAVITYFORMS_VERSION
-		);
-
-		//TODO Only load this thing once if there are 3 on the page.
-		return '<canvas id="' . esc_attr( $canvas_id ) . '"></canvas>'
-
-		// . '<style type="text/css">' . esc_attr( $canvas_id ) . '_viewer_container {
-		// 	overflow: auto;
-		// 	/* position: absolute;
-		// 	width: 100%;
-		// 	height: 100%; */
-		// 	width: 816px;
-		// 	height: 1054px;
-		//   }
-		//   </style>'
-
-		. '<div id="' . esc_attr( $canvas_id ) . '_viewer_container"><div id="' . esc_attr( $canvas_id ) . '_viewer" class="pdfViewer"></div></div>'
-
-		. "
-		<script type=\"text/javascript\">
+		return sprintf( 
+			'<div class="epgf-controls-container">'
+				// Paging controls.
+				. '<button class="button" onclick="return false" id="%1$s_prev" title="%2$s">%2$s</button> <button class="button" onclick="return false" id="%1$s_next" title="%3$s">%3$s</button> <span>%4$s <span id="%1$s_page_num"></span> / <span id="%1$s_page_count"></span></span> '
+				// Zoom controls.
+				. '<button class="button" onclick="return false" id="%1$s_zoom_out" title="%6$s">%6$s</button> <button class="button" onclick="return false" id="%1$s_zoom_in" title="%7$s">%7$s</button>'
+				. '</div>'
+				. '<div class="epgf-container"><canvas id="%5$s" class="epgf"></canvas></div>',
+			$canvas_id,
+			esc_html__( 'Previous', 'embed-pdf-gravityforms' ),
+			esc_html__( 'Next', 'embed-pdf-gravityforms' ),
+			esc_html__( 'Page:', 'embed-pdf-gravityforms' ),
+			esc_attr( $canvas_id ),	
+			esc_html__( 'Zoom Out', 'embed-pdf-gravityforms' ),
+			esc_html__( 'Zoom In', 'embed-pdf-gravityforms' )
+		)
+			. "<script type=\"text/javascript\">
 		window.addEventListener( 'load', function () {
 			// The workerSrc property shall be specified.
 			pdfjsLib.GlobalWorkerOptions.workerSrc = epgf.url_worker;
 
-			// Build a viewer
-const container = document.getElementById(\"" . esc_attr( $canvas_id ) . "_viewer_container\");
+			//These variables should be in an array just like the URLs
+			var pdfDoc = null,
+				pageNum = 1,
+				pageRendering = false,
+				pageNumPending = null,
+				canvas = document.getElementById('$canvas_id');
 
-const eventBus = new pdfjsViewer.EventBus();
+			/**
+			 * Get page info from document, resize canvas accordingly, and render page.
+			 * @param num Page number.
+			 */
+			function renderPage(num) {
+				pageRendering = true;
+				// Using promise to fetch the page
+				pdfDoc.getPage(num).then(function(page) {
 
-// (Optionally) enable hyperlinks within PDF files.
-// const pdfLinkService = new pdfjsViewer.PDFLinkService({
-//   eventBus,
-// });
+					// console.log( page.view );
+					// console.log( (canvas.width / page.view[2]) );
+					// console.log( canvas.style.width );
+					// console.log( canvas.width );  
+					var viewport = page.getViewport({scale: pdfDoc.currentScaleValue});
+					//var viewport = page.getViewport({scale: (canvas.width / page.view[2]) });
 
-// (Optionally) enable find controller.
-// const pdfFindController = new pdfjsViewer.PDFFindController({
-//   eventBus,
-//   linkService: pdfLinkService,
-// });
+					canvas.height = viewport.height;
+					canvas.width = viewport.width;
+				
+					// Render PDF page into canvas context
+					var renderContext = {
+						canvasContext: canvas.getContext('2d'),
+						viewport: viewport
+					};
+					var renderTask = page.render(renderContext);
+				
+					// Wait for rendering to finish
+					renderTask.promise.then(function() {
+						pageRendering = false;
+						if (pageNumPending !== null) {
+							// New page rendering is pending
+							renderPage(pageNumPending);
+							pageNumPending = null;
+						}
 
-// (Optionally) enable scripting support.
-// const pdfScriptingManager = new pdfjsViewer.PDFScriptingManager({
-//   eventBus,
-//   sandboxBundleSrc: SANDBOX_BUNDLE_SRC,
-// });
+						// Set the canvas width once or else zoom in and out break
+						document.getElementById('{$canvas_id}').style.width = '100%';
+						var fullWidth = document.getElementById('{$canvas_id}').width;
+						console.log( fullWidth );
+						document.getElementById('{$canvas_id}').style.width = fullWidth + 'px';
+					});
+				});
+			
+				// Update page counters
+				document.getElementById('{$canvas_id}_page_num').textContent = num;
+			}
+			
+			/**
+			 * If another page rendering in progress, waits until the rendering is
+			 * finised. Otherwise, executes rendering immediately.
+			 */
+			function queueRenderPage(num) {
+				if (pageRendering) {
+					pageNumPending = num;
+				} else {
+					renderPage(num);
+				}
+			}
+			
+			/**
+			 * Displays previous page.
+			 */
+			function onPrevPage() {
+				if (pageNum <= 1) {
+					return;
+				}
+				pageNum--;
+				queueRenderPage(pageNum);
+				togglePrevNextButtons();
+			}
+			document.getElementById('{$canvas_id}_prev').addEventListener('click', onPrevPage);
+			
+			/**
+			 * Displays next page.
+			 */
+			function onNextPage() {
+				if (pageNum >= pdfDoc.numPages) {
+					return;
+				}
+				pageNum++;
+				queueRenderPage(pageNum);
+				togglePrevNextButtons();
+			}
+			document.getElementById('{$canvas_id}_next').addEventListener('click', onNextPage);
+			
+			function togglePrevNextButtons() {
+				document.getElementById('{$canvas_id}_prev').disabled = ( 1 == pageNum );
+				document.getElementById('{$canvas_id}_next').disabled = ( pageNum == pdfDoc.numPages );
+			}
 
-const pdfViewer = new pdfjsViewer.PDFViewer({
-  container,
-  eventBus,
-  //linkService: pdfLinkService,
-  //findController: pdfFindController,
-  //scriptingManager: pdfScriptingManager,
-});
-//pdfLinkService.setViewer(pdfViewer);
-//pdfScriptingManager.setViewer(pdfViewer);
+			const DEFAULT_SCALE_DELTA = 1.1;
+			const MIN_SCALE = 0.25;
+			const MAX_SCALE = 10.0;
+			const DEFAULT_SCALE_VALUE = '1.5';
 
-eventBus.on('pagesinit', function () {
-  // We can use pdfViewer now, e.g. let's change default scale.
-  pdfViewer.currentScaleValue = 'page-width';
+			function onZoomIn(ticks) {
+				console.log( document.getElementById('{$canvas_id}').width );
+				//document.getElementById('{$canvas_id}').style.width = 'auto';
+				let newScale = pdfDoc.currentScaleValue;
+				do {
+				  newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
+				  newScale = Math.ceil(newScale * 10) / 10;
+				  newScale = Math.min(MAX_SCALE, newScale);
+				} while (--ticks && newScale < MAX_SCALE);
+				pdfDoc.currentScaleValue = newScale;
+				renderPage(pageNum);
+			}
+			document.getElementById('{$canvas_id}_zoom_in').addEventListener('click', onZoomIn);
+			
+			function onZoomOut(ticks) {
+				console.log( document.getElementById('{$canvas_id}').width );
+				//document.getElementById('{$canvas_id}').style.width = 'auto';
+				let newScale = pdfDoc.currentScaleValue;
+				do {
+				  newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
+				  newScale = Math.floor(newScale * 10) / 10;
+				  newScale = Math.max(MIN_SCALE, newScale);
+				} while (--ticks && newScale > MIN_SCALE);
+				pdfDoc.currentScaleValue = newScale;
+				renderPage(pageNum);
+			}			
+			document.getElementById('{$canvas_id}_zoom_out').addEventListener('click', onZoomOut);
 
-  // We can try searching for things.
-  //if (SEARCH_FOR) {
-  //  eventBus.dispatch('find', { type: '', query: SEARCH_FOR });
-  //}
-});
+			/**
+			 * Asynchronously downloads PDF.
+			 */
+			pdfjsLib.getDocument({ url: epgf.url_pdf, verbosity: 0 }).promise.then(function(pdfDoc_) {
+				pdfDoc = pdfDoc_;
+				document.getElementById('{$canvas_id}_page_count').textContent = pdfDoc.numPages;
+				pdfDoc.currentScaleValue = DEFAULT_SCALE_VALUE;
 
-			// Asynchronous download PDF
-			const loadingTask = pdfjsLib.getDocument({ url: epgf.url_pdf, verbosity: 0 });
-			(async () => {
-				const pdfDocument = await loadingTask.promise;
-				// Load it into the viewer
-				pdfViewer.setDocument(pdfDocument);
+				// Blow up the canvas to 100% width before rendering
+				document.getElementById('{$canvas_id}').style.width = '100%';
 
-				//
-				// Fetch the first page
-				//
-				const page = await pdfDocument.getPage(1);
-				const scale = 1; //1.5;
-				const viewport = page.getViewport({ scale });
-				// Support HiDPI-screens.
-				const outputScale = window.devicePixelRatio || 1;
+				// Initial/first page rendering
+				renderPage(pageNum);
 
-				//
-				// Prepare canvas using PDF page dimensions
-				//
-				const canvas = document.getElementById(\"$canvas_id\");
-				const context = canvas.getContext(\"2d\");
-
-				canvas.width = Math.floor(viewport.width * outputScale);
-				canvas.height = Math.floor(viewport.height * outputScale);
-				canvas.style.width = Math.floor(viewport.width) + \"px\";
-				canvas.style.height = Math.floor(viewport.height) + \"px\";
-
-				const transform = outputScale !== 1
-					? [outputScale, 0, 0, outputScale, 0, 0]
-					: null;
-
-				//
-				// Render PDF page into canvas context
-				//
-				const renderContext = {
-					canvasContext: context,
-					transform,
-					viewport,
-				};
-				page.render(renderContext);
-			})();
+				// Disable the Previous or Next buttons depending on page count.
+				togglePrevNextButtons();
+			});
 		});
 		</script>";
 	}
