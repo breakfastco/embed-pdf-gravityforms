@@ -150,14 +150,15 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		//TODO Only load this thing once if there are 3 on the page.
 		return '<canvas id="' . esc_attr( $canvas_id ) . '"></canvas>'
 
-		. '<style type="text/css">
-		#' . esc_attr( $canvas_id ) . '_viewer_container {
-			overflow: auto;
-			position: absolute;
-			width: 100%;
-			height: 100%;
-		  }
-		  </style>'
+		// . '<style type="text/css">' . esc_attr( $canvas_id ) . '_viewer_container {
+		// 	overflow: auto;
+		// 	/* position: absolute;
+		// 	width: 100%;
+		// 	height: 100%; */
+		// 	width: 816px;
+		// 	height: 1054px;
+		//   }
+		//   </style>'
 
 		. '<div id="' . esc_attr( $canvas_id ) . '_viewer_container"><div id="' . esc_attr( $canvas_id ) . '_viewer" class="pdfViewer"></div></div>'
 
@@ -220,7 +221,7 @@ eventBus.on('pagesinit', function () {
 				// Fetch the first page
 				//
 				const page = await pdfDocument.getPage(1);
-				const scale = 1.5;
+				const scale = 1; //1.5;
 				const viewport = page.getViewport({ scale });
 				// Support HiDPI-screens.
 				const outputScale = window.devicePixelRatio || 1;
