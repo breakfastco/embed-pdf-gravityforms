@@ -26,5 +26,11 @@ add_action( 'gform_loaded', 'embed_pdf_gravityforms_init' );
  * @return void
  */
 function embed_pdf_gravityforms_init() {
-	require_once dirname( EMBED_PDF_GRAVITYFORMS_PATH ) . '/includes/class-gf-field-pdf-viewer.php';
+	if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
+		return;
+	}
+
+	// Add-on init.
+	require_once dirname( EMBED_PDF_GRAVITYFORMS_PATH ) . '/includes/class-gf-addon-pdf-viewer.php';
+	GFAddOn::register( 'GF_Addon_PDF_Viewer' );
 }

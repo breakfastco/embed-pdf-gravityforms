@@ -86,6 +86,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			'placeholder_setting',
 			'description_setting',
 			'css_class_setting',
+			'initial_scale_setting',
 		);
 	}
 	
@@ -109,7 +110,9 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			true
 		);
 
+		//TODO remove this hard-coded PDF payload.
 		$url = 'https://breakfastco.test/wp-content/uploads/vscode-keyboard-shortcuts-macos.pdf';
+
 		// Do we have a PDF URL or path via Dynamic Population?
 		if ( ! empty( $value ) ) {
 			// Is the populated value a URL?
@@ -118,10 +121,13 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				$url = esc_url( $value );
 			}
 		}
-		//TODO url_pdf should be an array of field IDs and PDF urls for 2 on one page
+
 		wp_add_inline_script( $handle, 'const epgf = ' . wp_json_encode( array(
-			'url_worker' => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ),
-			'url_pdf'    => $url,
+			'url_worker'    => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ),
+		) ) );
+		wp_add_inline_script( $handle, 'const epgf_' . $this->id . ' = ' . wp_json_encode( array(
+			'initial_scale' => $this->initialScale,
+			'url_pdf'       => $url,
 		) ) );
 
 		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -292,10 +298,10 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			/**
 			 * Asynchronously downloads PDF.
 			 */
-			pdfjsLib.getDocument({ url: epgf.url_pdf, verbosity: 0 }).promise.then(function(pdfDoc_) {
+			pdfjsLib.getDocument({ url: epgf_{$this->id}.url_pdf, verbosity: 0 }).promise.then(function(pdfDoc_) {
 				pdfDoc = pdfDoc_;
 				document.getElementById('{$canvas_id}_page_count').textContent = pdfDoc.numPages;
-				pdfDoc.currentScaleValue = DEFAULT_SCALE_VALUE;
+				pdfDoc.currentScaleValue = epgf_{$this->id}.initial_scale;
 
 				// Blow up the canvas to 100% width before rendering
 				document.getElementById('{$canvas_id}').style.width = '100%';
@@ -329,6 +335,11 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			esc_html__( 'This is a content placeholder. PDFs are not displayed in the form admin. Preview this form to view the content.', 'embed-pdf-gravityforms' )
 		);
 		return ! is_admin() ? '{FIELD}' : $field_content;
+	}
+
+	public function sanitize_settings() {
+		parent::sanitize_settings();
+		$this->initialScale = GFCommon::to_number( $this->initialScale );
 	}
 }
 GF_Fields::register( new GF_Field_PDF_Viewer() );
