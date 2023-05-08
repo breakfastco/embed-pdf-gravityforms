@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Description: Add-on for Gravity Forms. Provides a PDF Viewer field.
  * Author: Breakfast Co.
  * Author URI: https://breakfastco.xyz
+ * Version: 1.0.0
  * Text Domain: 'embed-pdf-gravityforms'
  */
 
