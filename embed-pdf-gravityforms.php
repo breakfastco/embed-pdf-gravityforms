@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 define( 'EMBED_PDF_GRAVITYFORMS_PATH', __FILE__ );
 define( 'EMBED_PDF_GRAVITYFORMS_VERSION', '1.0.0' );
 
-add_action( 'gform_loaded', 'embed_pdf_gravityforms_init' );
+add_action( 'gform_loaded', 'embed_pdf_gravityforms_init', 5 );
 /**
  * Loads the plugin files and features.
  *

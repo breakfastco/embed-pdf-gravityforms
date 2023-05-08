@@ -11,10 +11,12 @@ if ( ! class_exists( 'GFForms' ) ) {
 	die();
 }
 
+
 /**
  * GF_Field_PDF_Viewer
  */
 class GF_Field_PDF_Viewer extends GF_Field {
+
 	/**
 	 * type
 	 *
@@ -100,15 +102,6 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	 * @return void
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
-		// Need this JavaScript file or we can't load PDFs.
-		$handle = 'embed-pdf-gravityforms-pdfjs';
-		wp_enqueue_script(
-			$handle,
-			plugins_url( "js/pdfjs/pdf.min.js", EMBED_PDF_GRAVITYFORMS_PATH ),
-			array(),
-			EMBED_PDF_GRAVITYFORMS_VERSION,
-			true
-		);
 
 		//TODO remove this hard-coded PDF payload.
 		$url = 'https://breakfastco.test/wp-content/uploads/vscode-keyboard-shortcuts-macos.pdf';
@@ -121,22 +114,6 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				$url = esc_url( $value );
 			}
 		}
-
-		wp_add_inline_script( $handle, 'const epgf = ' . wp_json_encode( array(
-			'url_worker'    => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ),
-		) ) );
-		wp_add_inline_script( $handle, 'const epgf_' . $this->id . ' = ' . wp_json_encode( array(
-			'initial_scale' => $this->initialScale,
-			'url_pdf'       => $url,
-		) ) );
-
-		$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_style(
-			'embed-pdf-gravityforms-field',
-			plugins_url( "css/viewer$min.css", EMBED_PDF_GRAVITYFORMS_PATH ),
-			array(),
-			EMBED_PDF_GRAVITYFORMS_VERSION
-		);
 
 		$canvas_id = sprintf(
 			'field_%s_%s_embed_pdf_gravityforms',
@@ -170,7 +147,11 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				pageNum = 1,
 				pageRendering = false,
 				pageNumPending = null,
-				canvas = document.getElementById('$canvas_id');
+				canvas = document.getElementById('$canvas_id'),
+				epgf_{$this->id} = {
+					url_pdf: '{$url}',
+					initial_scale: {$this->initialScale},
+				};
 
 			/**
 			 * Get page info from document, resize canvas accordingly, and render page.
@@ -181,13 +162,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				// Using promise to fetch the page
 				pdfDoc.getPage(num).then(function(page) {
 
-					// console.log( page.view );
-					// console.log( (canvas.width / page.view[2]) );
-					// console.log( canvas.style.width );
-					// console.log( canvas.width );  
 					var viewport = page.getViewport({scale: pdfDoc.currentScaleValue});
-					//var viewport = page.getViewport({scale: (canvas.width / page.view[2]) });
-
 					canvas.height = viewport.height;
 					canvas.width = viewport.width;
 				
@@ -210,7 +185,6 @@ class GF_Field_PDF_Viewer extends GF_Field {
 						// Set the canvas width once or else zoom in and out break
 						document.getElementById('{$canvas_id}').style.width = '100%';
 						var fullWidth = document.getElementById('{$canvas_id}').width;
-						console.log( fullWidth );
 						document.getElementById('{$canvas_id}').style.width = fullWidth + 'px';
 					});
 				});
@@ -265,11 +239,8 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			const DEFAULT_SCALE_DELTA = 1.1;
 			const MIN_SCALE = 0.25;
 			const MAX_SCALE = 10.0;
-			const DEFAULT_SCALE_VALUE = '1.5';
 
 			function onZoomIn(ticks) {
-				console.log( document.getElementById('{$canvas_id}').width );
-				//document.getElementById('{$canvas_id}').style.width = 'auto';
 				let newScale = pdfDoc.currentScaleValue;
 				do {
 				  newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
@@ -282,8 +253,6 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			document.getElementById('{$canvas_id}_zoom_in').addEventListener('click', onZoomIn);
 			
 			function onZoomOut(ticks) {
-				console.log( document.getElementById('{$canvas_id}').width );
-				//document.getElementById('{$canvas_id}').style.width = 'auto';
 				let newScale = pdfDoc.currentScaleValue;
 				do {
 				  newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
@@ -301,7 +270,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			pdfjsLib.getDocument({ url: epgf_{$this->id}.url_pdf, verbosity: 0 }).promise.then(function(pdfDoc_) {
 				pdfDoc = pdfDoc_;
 				document.getElementById('{$canvas_id}_page_count').textContent = pdfDoc.numPages;
-				pdfDoc.currentScaleValue = epgf_{$this->id}.initial_scale;
+				pdfDoc.currentScaleValue = epgf_{$this->id}.initial_scale ?? epgf.initial_scale;
 
 				// Blow up the canvas to 100% width before rendering
 				document.getElementById('{$canvas_id}').style.width = '100%';
@@ -339,6 +308,9 @@ class GF_Field_PDF_Viewer extends GF_Field {
 
 	public function sanitize_settings() {
 		parent::sanitize_settings();
+		if ( false === $this->initialScale ) {
+			$this->initialScale = GF_Addon_PDF_Viewer::DEFAULT_SCALE_VALUE;
+		}
 		$this->initialScale = GFCommon::to_number( $this->initialScale );
 	}
 }

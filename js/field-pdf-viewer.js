@@ -1,5 +1,8 @@
 // After field settings are loaded in the form editor.
 gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
+	if ( 'pdf_viewer' !== field[0].type ) {
+		return;
+	}
 	// Populate and update our initial scale property.
 	var el = document.getElementById('field_initial_scale');
 	if ( el ) {

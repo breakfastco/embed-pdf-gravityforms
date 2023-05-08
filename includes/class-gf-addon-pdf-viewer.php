@@ -91,7 +91,7 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
  
 		public static function get_instance() {
 			if ( self::$_instance == null ) {
-				self::$_instance = new self();
+				self::$_instance = new GF_Addon_PDF_Viewer();
 			}
 		 
 			return self::$_instance;
@@ -104,20 +104,9 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 			if ( $this->is_gravityforms_supported() && class_exists( 'GF_Field' ) ) {
 				require_once dirname( EMBED_PDF_GRAVITYFORMS_PATH ) . '/includes/class-gf-field-pdf-viewer.php';
 			}
-		}
 
-		/**
-		 * Handles hooks and loading of language files.
-		 */
-		public function init() {
-
-		}
-
-		public function init_admin() {
-			parent::init_admin();
-		 
-			//add_filter( 'gform_tooltips', array( $this, 'tooltips' ) );
 			add_action( 'gform_field_standard_settings', array( $this, 'add_field_settings' ), 10, 2 );
+			add_action( 'gform_enqueue_scripts', array( $this, 'add_inline_script' ), 10, 3 );
 		}
 
 		public function add_field_settings( $level, $form_id ) {
@@ -138,6 +127,18 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 			</li><?php
 		}
 
+		public function add_inline_script( $found_forms, $found_blocks, $post ) {
+			if ( wp_script_is( 'epgf_pdfjs' ) ) {
+				wp_add_inline_script(
+					'epgf_pdfjs',
+					'const epgf = ' . wp_json_encode( array(
+						'url_worker'    => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No unminimized version of this script included.
+						'initial_scale' => self::DEFAULT_SCALE_VALUE,
+					) )
+				);
+			}
+		}
+
 		/**
 		 * Return the scripts which should be enqueued.
 		 *
@@ -147,18 +148,21 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			$scripts = array(
 				array(
-					'handle'  => 'pdf-viewer',
+					// Need this JavaScript file or we can't load PDFs.
+					'handle'    => 'epgf_pdfjs',
+					'src'       => plugins_url( "js/pdfjs/pdf.min.js", EMBED_PDF_GRAVITYFORMS_PATH ), // No un-minimized version of this script included.
+					'version'   => $this->_version,
+					'deps'      => array(),
+					'in_footer' => true,
+					'enqueue'   => array(
+						array( 'field_types' => array( 'pdf_viewer' ) ),
+					),
+				),
+				//TODO this should only be admin
+				array(
+					'handle'  => 'epgf_pdf_viewer',
 					'src'     => plugins_url( "js/field-pdf-viewer{$min}.js", EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version' => $this->_version,
-					'deps'    => array(),
-					// 'strings' => array(
-					// 	'form_id'        => ( ! empty( $_GET['id'] ) ? $_GET['id'] : null ),
-					// 	'ajax_url'       => admin_url( 'admin-ajax.php' ),
-					// 	'feed_id'        => $this->get_current_feed_id(),
-					// 	'nonce'          => wp_create_nonce( self::NONCE_AJAX ),
-					// 	'test_failed'    => __( 'Insert Test Row failed', 'gravityforms-quote-tracker' ),
-					// 	'test_succeeded' => __( 'Insert Test Row succeeded', 'gravityforms-quote-tracker' ),
-					// ),
 					'enqueue' => array(
 						array( 'field_types' => array( 'pdf_viewer' ) ),
 					),
@@ -166,6 +170,20 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 			);
 			return array_merge( parent::scripts(), $scripts );
 	   }
+
+	   public function styles() {
+			$styles = array(
+				array(
+					'handle'  => 'embed-pdf-gravityforms-field',
+					'src'     => plugins_url( "css/viewer$min.css", EMBED_PDF_GRAVITYFORMS_PATH ),
+					'version' => $this->_version,
+					'enqueue' => array(
+						array( 'field_types' => array( 'pdf_viewer' ) ),
+					)
+				)
+			);
+			return array_merge( parent::styles(), $styles );
+		}
 
 		// public function tooltips( $tooltips ) {
 		// 	$simple_tooltips = array(
