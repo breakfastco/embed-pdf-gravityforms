@@ -113,14 +113,22 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 			if ( 20 !== $level ?? 0 ) {
 				return;
 			}
-		
+
+			// PDF URL.
+			?><li class="pdf_url_setting field_setting">
+			<label for="field_pdf_url" class="section_label">
+				<?php esc_html_e( 'PDF', 'embed-pdf-gravityforms' ); ?>
+			</label>
+			<button class="gform-button gform-button--white" id="choose_pdf_url"><?php esc_html_e( 'Choose PDF', 'embed-pdf-gravityforms' ); ?></button>
+			<input type="text" id="field_pdf_url" autocomplete="off" placeholder="https://" />
+			</li><?php
+
+			// Initial Scale.
 			?><li class="initial_scale_setting field_setting">
 			<label for="field_initial_scale" class="section_label">
 				<?php esc_html_e( 'Initial Scale', 'embed-pdf-gravityforms' ); ?>
-			
 			</label>
 			<input type="text" id="field_initial_scale" autocomplete="off" placeholder="<?php echo esc_attr( self::DEFAULT_SCALE_VALUE ); ?>" />
-			
 			<div id="gform_server_initial_scale_notice">
 				<small><?php esc_html_e( 'Loading too small to read? Increase this value to zoom in.', 'embed-pdf-gravityforms' ); ?></small>
 			</div>
@@ -173,14 +181,24 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 
 	   public function styles() {
 			$styles = array(
+				// Front-end.
 				array(
 					'handle'  => 'embed-pdf-gravityforms-field',
-					'src'     => plugins_url( "css/viewer$min.css", EMBED_PDF_GRAVITYFORMS_PATH ),
+					'src'     => plugins_url( "css/viewer{$min}.css", EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version' => $this->_version,
 					'enqueue' => array(
 						array( 'field_types' => array( 'pdf_viewer' ) ),
-					)
-				)
+					),
+				),
+				// Form editor.
+				array(
+					'handle'  => 'embed-pdf-gravityforms-editor',
+					'src'     => plugins_url( "css/editor{$min}.css", EMBED_PDF_GRAVITYFORMS_PATH ),
+					'version' => $this->_version,
+					'enqueue' => array(
+						array( 'query' => 'page=gf_edit_forms&id=_notempty_' ),
+					),
+				),
 			);
 			return array_merge( parent::styles(), $styles );
 		}

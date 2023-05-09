@@ -80,15 +80,16 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			'label_setting',
 			'label_placement_setting',
 			'admin_label_setting',
-			'size_setting',
+			'size_setting', // ?
 			'rules_setting',
 			'visibility_setting',
 			'duplicate_setting',
-			'default_value_setting',
-			'placeholder_setting',
+			'default_value_setting', // ?
+			'placeholder_setting', // ?
 			'description_setting',
 			'css_class_setting',
-			'initial_scale_setting',
+			'initial_scale_setting', /* Ours */
+			'pdf_url_setting', /* Ours */
 		);
 	}
 	
@@ -103,16 +104,25 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
 
-		//TODO remove this hard-coded PDF payload.
-		$url = 'https://breakfastco.test/wp-content/uploads/vscode-keyboard-shortcuts-macos.pdf';
+		// The user might have chosen a PDF and saved it with the form.
+		$url = $this->pdfUrl;
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			$url = '';
+		}
 
-		// Do we have a PDF URL or path via Dynamic Population?
+		// Do we have a PDF URL via Dynamic Population?
 		if ( ! empty( $value ) ) {
 			// Is the populated value a URL?
 			if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
 				// Yes.
 				$url = esc_url( $value );
 			}
+		}
+
+		// Do we even have a PDF?
+		if ( empty( $url ) ) {
+			// No.
+			return;
 		}
 
 		$canvas_id = sprintf(
