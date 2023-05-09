@@ -171,6 +171,9 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 					'handle'  => 'epgf_pdf_viewer',
 					'src'     => plugins_url( "js/field-pdf-viewer{$min}.js", EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version' => $this->_version,
+					'strings' => array(
+						'site_url' => site_url(),
+					),
 					'enqueue' => array(
 						array( 'field_types' => array( 'pdf_viewer' ) ),
 					),
