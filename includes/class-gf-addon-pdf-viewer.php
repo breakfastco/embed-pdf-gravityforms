@@ -180,6 +180,7 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 	   }
 
 	   public function styles() {
+			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			$styles = array(
 				// Front-end.
 				array(
