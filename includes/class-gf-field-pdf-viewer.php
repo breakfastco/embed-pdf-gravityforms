@@ -122,6 +122,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		// Do we even have a PDF?
 		if ( empty( $url ) ) {
 			// No.
+			$this->log_error( sprintf( __( 'No PDF to load into field %s on form %s', 'embed-pdf-gravityforms' ), $this->id, $form['id'] ) );
 			return;
 		}
 
@@ -314,6 +315,12 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			esc_html__( 'This is a content placeholder. PDFs are not displayed in the form admin. Preview this form to view the content.', 'embed-pdf-gravityforms' )
 		);
 		return ! is_admin() ? '{FIELD}' : $field_content;
+	}
+
+	protected function log_error( $message ) {
+		// Logging is officially supported in Add-ons not Fields.
+		$addon = GF_Addon_PDF_Viewer::get_instance();
+		$addon->log_error( $message );
 	}
 
 	public function sanitize_settings() {
