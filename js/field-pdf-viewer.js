@@ -22,7 +22,13 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 					//if this works rewrite
 					if ( 'field_pdf_url' === key ) {
 						if ( '' !== this.value && epgf_pdf_viewer_strings.site_url !== this.value.substring( 0, epgf_pdf_viewer_strings.site_url.length ) ) {
-							setFieldError( 'pdf_url_setting', 'below', 'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer. <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Learn about CORS →</a>' );
+							setFieldError(
+								'pdf_url_setting',
+								'below',
+								'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer.'
+									+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Learn about CORS →</a>'
+									//+ '<p><button class="gform-button gform-button--white">Download PDF into Media Library</button></p>'
+							);
 						} else {
 							resetFieldError( 'pdf_url_setting' );
 						}
