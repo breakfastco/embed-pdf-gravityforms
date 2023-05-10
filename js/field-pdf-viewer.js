@@ -4,6 +4,8 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 		return;
 	}
 
+	const { __ } = wp.i18n;
+
 	// Populate and update our text settings for initial scale and PDF URL.
 	var textSettings = {
 		'field_initial_scale': 'initialScale',
@@ -25,8 +27,8 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 							setFieldError(
 								'pdf_url_setting',
 								'below',
-								'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer.'
-									+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Learn about CORS →</a>'
+								__( 'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer.', 'embed-pdf-gravityforms' )
+									+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">' + __( 'Learn about CORS →', 'embed-pdf-gravityforms' ) + '</a>'
 									//+ '<p><button class="gform-button gform-button--white">Download PDF into Media Library</button></p>'
 							);
 						} else {
@@ -51,10 +53,11 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 
 function handleChooseClick (e) {
 	e.preventDefault();
+	const { __ } = wp.i18n;
 	var file_frame = wp.media.frames.file_frame = wp.media({
-		title: 'Choose PDF',
+		title: __( 'Choose PDF', 'embed-pdf-gravityforms' ),
 		button: {
-			text: 'Load'
+			text: __( 'Load', 'embed-pdf-gravityforms' )
 		},
 		frame: 'select',
 		multiple: false
