@@ -126,11 +126,10 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			return;
 		}
 
-		$canvas_id = sprintf(
-			'field_%s_%s_embed_pdf_gravityforms',
-			$form['id'],
-			$this->id
-		);
+		$this->sanitize_settings();
+
+		$field_id = sprintf( 'field_%s_%s', $form['id'], $this->id );
+		$canvas_id = $field_id . '_embed_pdf_gravityforms';
 
 		return sprintf( 
 			'<div class="ginput_container ginput_container_pdf_viewer"><div class="epgf-controls-container">'
@@ -294,10 +293,18 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				togglePrevNextButtons();
 			}).catch(function(error){
 				console.log(error);
-				const el = document.querySelector('#" . sprintf( 'field_%s_%s', $form['id'], $this->id ) . " .ginput_container_pdf_viewer');
-				if ( el && error.details ) {
-					el.innerHTML += '<p>' + error.details + '</p>';
+				// Display an error on the front-end.
+				const el = document.querySelector('#{$field_id} .ginput_container_pdf_viewer');
+				if ( el && error.message ) {
+					var msg = '<p><b>" . __( 'PDF Viewer Error:', 'embed-pdf-gravityforms' ) . "</b> ' + error.message;
+					if ( epgf.is_user_logged_in ) {
+						msg += ' <a href=\"https://breakfastco.xyz/embed-pdf-for-gravity-forms/#troubleshooting\">" . __( 'Troubleshooting →', 'embed-pdf-gravityforms' ) . "</a>';
+					}
+					msg += '</p>';
+					el.innerHTML += msg;
 				}
+				// Hide the broken controls.
+				const controlEls = document.querySelectorAll( '#{$field_id} .epgf-controls-container, #{$field_id} .epgf-container' ).forEach( function( el ) { el.style.display ='none'; });
 			});
 		});
 		</script>";

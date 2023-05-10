@@ -140,8 +140,9 @@ if ( class_exists( 'GFFeedAddOn' ) ) {
 				wp_add_inline_script(
 					'epgf_pdfjs',
 					'const epgf = ' . wp_json_encode( array(
-						'url_worker'    => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No unminimized version of this script included.
-						'initial_scale' => self::DEFAULT_SCALE_VALUE,
+						'url_worker'        => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No unminimized version of this script included.
+						'initial_scale'     => self::DEFAULT_SCALE_VALUE,
+						'is_user_logged_in' => is_user_logged_in(),
 					) )
 				);
 			}
