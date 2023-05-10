@@ -292,6 +292,12 @@ class GF_Field_PDF_Viewer extends GF_Field {
 
 				// Disable the Previous or Next buttons depending on page count.
 				togglePrevNextButtons();
+			}).catch(function(error){
+				console.log(error);
+				const el = document.querySelector('#" . sprintf( 'field_%s_%s', $form['id'], $this->id ) . " .ginput_container_pdf_viewer');
+				if ( el && error.details ) {
+					el.innerHTML += '<p>' + error.details + '</p>';
+				}
 			});
 		});
 		</script>";
