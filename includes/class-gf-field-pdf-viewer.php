@@ -145,7 +145,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			esc_html__( 'Previous', 'embed-pdf-gravityforms' ),
 			esc_html__( 'Next', 'embed-pdf-gravityforms' ),
 			esc_html__( 'Page:', 'embed-pdf-gravityforms' ),
-			esc_attr( $canvas_id ),	
+			esc_attr( $canvas_id ),
 			esc_html__( 'Zoom Out', 'embed-pdf-gravityforms' ),
 			esc_html__( 'Zoom In', 'embed-pdf-gravityforms' )
 		)
