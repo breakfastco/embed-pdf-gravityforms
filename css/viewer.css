@@ -4,8 +4,49 @@ div.epgf-container{
 canvas.epgf{
 	width: auto;
 }
-/*@media (max-width: 480px) {
-	canvas.epgf{
-		width: auto;
+
+/* Input wrapper gets a light grey border and background to contrast controls and document */
+.ginput_container_pdf_viewer{
+	border: 1px solid #eaeaea;
+	background-color: #f9f9f9;
+	padding: 1em;
+}
+/* Border around the actual PDF */
+.ginput_container_pdf_viewer canvas{
+	border: 1px solid #e6e6e6;
+}
+
+/* Mimic the .gform_footer input styles from Gravity Forms core */
+.ginput_container_pdf_viewer button{
+	/* -webkit-appearance: none !important; */
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 1em;
+	padding: 12px 24px;
+	text-decoration: none;
+}
+
+/* Space between controls and the top of the PDF */
+.epgf-controls-container{
+	padding-bottom: .95em;
+	line-height: 3em; /* If the controls wrap to multiple lines */
+}
+/* Space between buttons and "Page: 1 / 2" */
+.epgf-controls-container span.paging{
+	padding-left: 1em;
+	padding-right: 1em;
+}
+/* Wrap the Zoom In and Out buttons on smaller screens */
+@media (max-width: 768px ) {
+	.epgf-controls-container span.zoom{
+		display: block;
 	}
-}*/
+}
+/* Wrap the "Page: 1 / 2" on smaller screens */
+@media (max-width: 480px ) {
+	.epgf-controls-container span.paging{
+		display: block;
+		padding-left: .3em;
+	}
+}

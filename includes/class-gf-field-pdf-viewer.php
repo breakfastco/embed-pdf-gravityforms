@@ -133,13 +133,14 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		);
 
 		return sprintf( 
-			'<div class="epgf-controls-container">'
+			'<div class="ginput_container ginput_container_pdf_viewer"><div class="epgf-controls-container">'
 				// Paging controls.
-				. '<button class="button" onclick="return false" id="%1$s_prev" title="%2$s">%2$s</button> <button class="button" onclick="return false" id="%1$s_next" title="%3$s">%3$s</button> <span>%4$s <span id="%1$s_page_num"></span> / <span id="%1$s_page_count"></span></span> '
+				. '<button class="button" onclick="return false" id="%1$s_prev" title="%2$s">%2$s</button> <button class="button" onclick="return false" id="%1$s_next" title="%3$s">%3$s</button> '
+				. '<span class="paging">%4$s <span id="%1$s_page_num"></span> / <span id="%1$s_page_count"></span></span> '
 				// Zoom controls.
-				. '<button class="button" onclick="return false" id="%1$s_zoom_out" title="%6$s">%6$s</button> <button class="button" onclick="return false" id="%1$s_zoom_in" title="%7$s">%7$s</button>'
+				. '<span class="zoom"><button class="button" onclick="return false" id="%1$s_zoom_out" title="%6$s">%6$s</button> <button class="button" onclick="return false" id="%1$s_zoom_in" title="%7$s">%7$s</button></span>'
 				. '</div>'
-				. '<div class="epgf-container"><canvas id="%5$s" class="epgf"></canvas></div>',
+				. '<div class="epgf-container"><canvas id="%5$s" class="epgf"></canvas></div></div>',
 			$canvas_id,
 			esc_html__( 'Previous', 'embed-pdf-gravityforms' ),
 			esc_html__( 'Next', 'embed-pdf-gravityforms' ),
