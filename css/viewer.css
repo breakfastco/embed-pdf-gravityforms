@@ -12,7 +12,7 @@ canvas.epgf{
 	padding: 1em;
 }
 /* Border around the actual PDF */
-.ginput_container_pdf_viewer canvas{
+.ginput_container_pdf_viewer canvas.epgf{
 	border: 1px solid #e6e6e6;
 }
 
