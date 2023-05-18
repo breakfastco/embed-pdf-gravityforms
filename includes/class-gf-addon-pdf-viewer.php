@@ -8,7 +8,7 @@ if ( method_exists( 'GFForms', 'include_feed_addon_framework' ) ) {
 if ( class_exists( 'GFAddOn' ) ) {
 	class GF_Addon_PDF_Viewer extends GFAddOn {
 
-		const DEFAULT_SCALE_VALUE = '1.5';
+		const DEFAULT_SCALE_VALUE = '1';
 
 		/**
 		 * Defines the version of the Gravity Forms Quote Tracker Writer Add-On.

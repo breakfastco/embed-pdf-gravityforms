@@ -341,7 +341,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 
 	public function sanitize_settings() {
 		parent::sanitize_settings();
-		if ( false === $this->initialScale ) {
+		if ( empty( $this->initialScale ) ) {
 			$this->initialScale = GF_Addon_PDF_Viewer::DEFAULT_SCALE_VALUE;
 		}
 		$this->initialScale = GFCommon::to_number( $this->initialScale );
