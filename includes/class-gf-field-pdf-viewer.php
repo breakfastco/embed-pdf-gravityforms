@@ -196,6 +196,10 @@ class GF_Field_PDF_Viewer extends GF_Field {
 						// Set the canvas width once or else zoom in and out break
 						canvas.style.width = '100%';
 						canvas.style.width = canvas.width + 'px';
+
+						// Dispatch an event after a page render.
+						const event = new CustomEvent( 'epgf_render_page', { detail: pageNum });
+						window.dispatchEvent(event);
 					});
 				});
 			
