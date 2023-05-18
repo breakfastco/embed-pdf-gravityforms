@@ -176,14 +176,14 @@ class GF_Field_PDF_Viewer extends GF_Field {
 					var viewport = page.getViewport({scale: pdfDoc.currentScaleValue});
 					canvas.height = viewport.height;
 					canvas.width = viewport.width;
-				
+
 					// Render PDF page into canvas context
 					var renderContext = {
 						canvasContext: canvas.getContext('2d'),
 						viewport: viewport
 					};
 					var renderTask = page.render(renderContext);
-				
+
 					// Wait for rendering to finish
 					renderTask.promise.then(function() {
 						pageRendering = false;
@@ -228,7 +228,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				togglePrevNextButtons();
 			}
 			document.getElementById('{$canvas_id}_prev').addEventListener('click', onPrevPage);
-			
+
 			/**
 			 * Displays next page.
 			 */
@@ -241,7 +241,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				togglePrevNextButtons();
 			}
 			document.getElementById('{$canvas_id}_next').addEventListener('click', onNextPage);
-			
+
 			function togglePrevNextButtons() {
 				document.getElementById('{$canvas_id}_prev').disabled = ( 1 == pageNum );
 				document.getElementById('{$canvas_id}_next').disabled = ( pageNum == pdfDoc.numPages );
@@ -309,7 +309,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		});
 		</script>";
 	}
-	
+
 	/**
 	 * This method is used to define the fields overall appearance, such as how
 	 * the admin buttons, field label, description or validation messages are

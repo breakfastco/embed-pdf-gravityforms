@@ -182,9 +182,9 @@ if ( class_exists( 'GFAddOn' ) ) {
 				),
 			);
 			return array_merge( parent::scripts(), $scripts );
-	   }
+		}
 
-	   public function styles() {
+		public function styles() {
 			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			$styles = array(
 				// Front-end.
