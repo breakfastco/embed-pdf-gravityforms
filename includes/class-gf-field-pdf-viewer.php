@@ -194,9 +194,8 @@ class GF_Field_PDF_Viewer extends GF_Field {
 						}
 
 						// Set the canvas width once or else zoom in and out break
-						document.getElementById('{$canvas_id}').style.width = '100%';
-						var fullWidth = document.getElementById('{$canvas_id}').width;
-						document.getElementById('{$canvas_id}').style.width = fullWidth + 'px';
+						canvas.style.width = '100%';
+						canvas.style.width = canvas.width + 'px';
 					});
 				});
 			
@@ -254,37 +253,40 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			function onZoomIn(ticks) {
 				let newScale = pdfDoc.currentScaleValue;
 				do {
-				  newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
-				  newScale = Math.ceil(newScale * 10) / 10;
-				  newScale = Math.min(MAX_SCALE, newScale);
+					newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
+					newScale = Math.ceil(newScale * 10) / 10;
+					newScale = Math.min(MAX_SCALE, newScale);
 				} while (--ticks && newScale < MAX_SCALE);
 				pdfDoc.currentScaleValue = newScale;
 				renderPage(pageNum);
 			}
 			document.getElementById('{$canvas_id}_zoom_in').addEventListener('click', onZoomIn);
-			
+
 			function onZoomOut(ticks) {
 				let newScale = pdfDoc.currentScaleValue;
 				do {
-				  newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
-				  newScale = Math.floor(newScale * 10) / 10;
-				  newScale = Math.max(MIN_SCALE, newScale);
+					newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
+					newScale = Math.floor(newScale * 10) / 10;
+					newScale = Math.max(MIN_SCALE, newScale);
 				} while (--ticks && newScale > MIN_SCALE);
 				pdfDoc.currentScaleValue = newScale;
 				renderPage(pageNum);
-			}			
+			}
 			document.getElementById('{$canvas_id}_zoom_out').addEventListener('click', onZoomOut);
 
 			/**
 			 * Asynchronously downloads PDF.
 			 */
 			pdfjsLib.getDocument({ url: epgf_{$this->id}.url_pdf, verbosity: 0 }).promise.then(function(pdfDoc_) {
+				if (pdfDoc) {
+					pdfDoc.destroy();
+				}
 				pdfDoc = pdfDoc_;
 				document.getElementById('{$canvas_id}_page_count').textContent = pdfDoc.numPages;
 				pdfDoc.currentScaleValue = epgf_{$this->id}.initial_scale ?? epgf.initial_scale;
 
 				// Blow up the canvas to 100% width before rendering
-				document.getElementById('{$canvas_id}').style.width = '100%';
+				canvas.style.width = '100%';
 
 				// Initial/first page rendering
 				renderPage(pageNum);
