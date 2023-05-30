@@ -18,14 +18,14 @@ if ( ! class_exists( 'GFForms' ) ) {
 class GF_Field_PDF_Viewer extends GF_Field {
 
 	/**
-	 * type
+	 * Field type.
 	 *
 	 * @var string
 	 */
 	public $type = 'pdf_viewer';
 
 	/**
-	 * get_form_editor_field_title
+	 * Returns the field title.
 	 *
 	 * @return string
 	 */
@@ -34,7 +34,12 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	}
 
 	/**
-	 * get_form_editor_button
+	 * Returns the field button properties for the form editor. The array
+	 * contains two elements:
+	 * 'group' => 'standard_fields'|'advanced_fields'|'post_fields'|'pricing_fields'
+	 * 'text'  => 'Button text'
+	 *
+	 * @since 2.4
 	 *
 	 * @return array
 	 */
@@ -72,6 +77,12 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		return 'gform-icon--page';
 	}
 
+	/**
+	 * The class names of the settings which should be available on the field in
+	 * the form editor.
+	 *
+	 * @return array
+	 */
 	public function get_form_editor_field_settings() {
 		return array(
 			'conditional_logic_field_setting',
@@ -92,15 +103,16 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			'pdf_url_setting', /* Ours */
 		);
 	}
-	
+
 	/**
-	 * This method is used to define the fields inner markup, including the div 
-	 * with the ginput_container class.
+	 * Define the fields inner markup, including the div with the
+	 * ginput_container class.
 	 *
-	 * @param  mixed $form
-	 * @param  mixed $value
-	 * @param  mixed $entry
-	 * @return void
+	 * @param array        $form The Form Object currently being processed.
+	 * @param string|array $value The field value. From default/dynamic population, $_POST, or a resumed incomplete submission.
+	 * @param null|array   $entry Null or the Entry Object currently being edited.
+	 *
+	 * @return string
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
 
@@ -321,10 +333,10 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	 * the admin buttons, field label, description or validation messages are
 	 * included.
 	 *
-	 * @param  mixed $value
-	 * @param  mixed $force_frontend_label
-	 * @param  mixed $form
-	 * @return void
+	 * @param string|array $value                The field value. From default/dynamic population, $_POST, or a resumed incomplete submission.
+	 * @param bool         $force_frontend_label Should the frontend label be displayed in the admin even if an admin label is configured.
+	 * @param array        $form                 The Form Object currently being processed.
+	 * @return string
 	 */
 	public function get_field_content( $value, $force_frontend_label, $form ) {
 		$field_content = sprintf(
@@ -337,12 +349,25 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		return ! is_admin() ? '{FIELD}' : $field_content;
 	}
 
+	/**
+	 * Save an error. Logging is officially supported in Add-ons not Fields.
+	 *
+	 * @param  string $message The message to log.
+	 * @return void
+	 */
 	protected function log_error( $message ) {
 		// Logging is officially supported in Add-ons not Fields.
 		$addon = GF_Addon_PDF_Viewer::get_instance();
 		$addon->log_error( $message );
 	}
 
+	/**
+	 * Forces settings into expected values while saving the form object. No
+	 * escaping should be done at this stage to prevent double escaping on
+	 * output.
+	 *
+	 * @return void
+	 */
 	public function sanitize_settings() {
 		parent::sanitize_settings();
 		if ( empty( $this->initialScale ) ) {

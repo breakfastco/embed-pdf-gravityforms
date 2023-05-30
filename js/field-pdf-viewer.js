@@ -51,6 +51,7 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 	}
 }, 10, 2 );
 
+// Choose PDF button click handler in form editor & feed settings in pro
 function handleChooseClick (e) {
 	e.preventDefault();
 	const { __ } = wp.i18n;
