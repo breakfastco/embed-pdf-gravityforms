@@ -134,7 +134,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		// Do we even have a PDF?
 		if ( empty( $url ) ) {
 			// No.
-			$this->log_error( sprintf( __( 'No PDF to load into field %s on form %s', 'embed-pdf-gravityforms' ), $this->id, $form['id'] ) );
+			$this->log_error( sprintf( __( 'No PDF to load into field %1$s on form %2$s', 'embed-pdf-gravityforms' ), $this->id, $form['id'] ) );
 			return;
 		}
 
@@ -143,7 +143,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		$field_id = sprintf( 'field_%s_%s', $form['id'], $this->id );
 		$canvas_id = $field_id . '_embed_pdf_gravityforms';
 
-		return sprintf( 
+		return sprintf(
 			'<div class="ginput_container ginput_container_pdf_viewer"><div class="epgf-controls-container">'
 				// Paging controls.
 				. '<button class="button" onclick="return false" id="%1$s_prev" title="%2$s">%2$s</button> <button class="button" onclick="return false" id="%1$s_next" title="%3$s">%3$s</button> '
