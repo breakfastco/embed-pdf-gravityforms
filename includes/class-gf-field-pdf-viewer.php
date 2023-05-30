@@ -140,191 +140,45 @@ class GF_Field_PDF_Viewer extends GF_Field {
 
 		$this->sanitize_settings();
 
-		$field_id = sprintf( 'field_%s_%s', $form['id'], $this->id );
+		$form_id   = $form['id'] ?? rgget( 'id' );
+		$field_id  = sprintf( 'field_%s_%s', $form_id, $this->id );
 		$canvas_id = $field_id . '_embed_pdf_gravityforms';
 
 		return sprintf(
 			'<div class="ginput_container ginput_container_pdf_viewer"><div class="epgf-controls-container">'
 				// Paging controls.
-				. '<button class="button" onclick="return false" id="%1$s_prev" title="%2$s">%2$s</button> <button class="button" onclick="return false" id="%1$s_next" title="%3$s">%3$s</button> '
+				. '<button class="button" onclick="return false" id="%1$s_prev" data-viewer-id="%7$s" title="%2$s">%2$s</button> <button class="button" onclick="return false" id="%1$s_next" data-viewer-id="%7$s" title="%3$s">%3$s</button> '
 				. '<span class="paging">%4$s <span id="%1$s_page_num"></span> / <span id="%1$s_page_count"></span></span> '
 				// Zoom controls.
-				. '<span class="zoom"><button class="button" onclick="return false" id="%1$s_zoom_out" title="%6$s">%6$s</button> <button class="button" onclick="return false" id="%1$s_zoom_in" title="%7$s">%7$s</button></span>'
+				. '<span class="zoom"><button class="button" onclick="return false" id="%1$s_zoom_out" data-viewer-id="%7$s" title="%5$s">%5$s</button> <button class="button" onclick="return false" id="%1$s_zoom_in" data-viewer-id="%7$s" title="%6$s">%6$s</button></span>'
 				. '</div>'
-				. '<div class="epgf-container"><canvas id="%5$s" class="epgf"></canvas></div></div>',
-			$canvas_id,
+				. '<div class="epgf-container"><canvas id="%1$s" class="epgf"></canvas></div></div>',
+			esc_attr( $canvas_id ),
 			esc_html__( 'Previous', 'embed-pdf-gravityforms' ),
 			esc_html__( 'Next', 'embed-pdf-gravityforms' ),
 			esc_html__( 'Page:', 'embed-pdf-gravityforms' ),
-			esc_attr( $canvas_id ),
 			esc_html__( 'Zoom Out', 'embed-pdf-gravityforms' ),
-			esc_html__( 'Zoom In', 'embed-pdf-gravityforms' )
+			esc_html__( 'Zoom In', 'embed-pdf-gravityforms' ),
+			esc_attr( $this->id )
 		)
 			. "<script type=\"text/javascript\">
-		window.addEventListener( 'load', function () {
-			// The workerSrc property shall be specified.
-			pdfjsLib.GlobalWorkerOptions.workerSrc = epgf.url_worker;
-
-			//These variables should be in an array just like the URLs
-			var pdfDoc = null,
-				pageNum = 1,
-				pageRendering = false,
-				pageNumPending = null,
-				canvas = document.getElementById('$canvas_id'),
-				epgf_{$this->id} = {
-					url_pdf: '{$url}',
-					initial_scale: {$this->initialScale},
-				};
-
-			/**
-			 * Get page info from document, resize canvas accordingly, and render page.
-			 * @param num Page number.
-			 */
-			function renderPage(num) {
-				pageRendering = true;
-				// Using promise to fetch the page
-				pdfDoc.getPage(num).then(function(page) {
-
-					var viewport = page.getViewport({scale: pdfDoc.currentScaleValue});
-					canvas.height = viewport.height;
-					canvas.width = viewport.width;
-
-					// Render PDF page into canvas context
-					var renderContext = {
-						canvasContext: canvas.getContext('2d'),
-						viewport: viewport
-					};
-					var renderTask = page.render(renderContext);
-
-					// Wait for rendering to finish
-					renderTask.promise.then(function() {
-						pageRendering = false;
-						if (pageNumPending !== null) {
-							// New page rendering is pending
-							renderPage(pageNumPending);
-							pageNumPending = null;
-						}
-
-						// Set the canvas width once or else zoom in and out break
-						canvas.style.width = '100%';
-						canvas.style.width = canvas.width + 'px';
-
-						// Dispatch an event after a page render.
-						const event = new CustomEvent( 'epgf_render_page', { detail: pageNum });
-						window.dispatchEvent(event);
-					});
-				});
-			
-				// Update page counters
-				document.getElementById('{$canvas_id}_page_num').textContent = num;
-			}
-			
-			/**
-			 * If another page rendering in progress, waits until the rendering is
-			 * finised. Otherwise, executes rendering immediately.
-			 */
-			function queueRenderPage(num) {
-				if (pageRendering) {
-					pageNumPending = num;
-				} else {
-					renderPage(num);
-				}
-			}
-			
-			/**
-			 * Displays previous page.
-			 */
-			function onPrevPage() {
-				if (pageNum <= 1) {
-					return;
-				}
-				pageNum--;
-				queueRenderPage(pageNum);
-				togglePrevNextButtons();
-			}
-			document.getElementById('{$canvas_id}_prev').addEventListener('click', onPrevPage);
-
-			/**
-			 * Displays next page.
-			 */
-			function onNextPage() {
-				if (pageNum >= pdfDoc.numPages) {
-					return;
-				}
-				pageNum++;
-				queueRenderPage(pageNum);
-				togglePrevNextButtons();
-			}
-			document.getElementById('{$canvas_id}_next').addEventListener('click', onNextPage);
-
-			function togglePrevNextButtons() {
-				document.getElementById('{$canvas_id}_prev').disabled = ( 1 == pageNum );
-				document.getElementById('{$canvas_id}_next').disabled = ( pageNum == pdfDoc.numPages );
-			}
-
-			const DEFAULT_SCALE_DELTA = 1.1;
-			const MIN_SCALE = 0.25;
-			const MAX_SCALE = 10.0;
-
-			function onZoomIn(ticks) {
-				let newScale = pdfDoc.currentScaleValue;
-				do {
-					newScale = (newScale * DEFAULT_SCALE_DELTA).toFixed(2);
-					newScale = Math.ceil(newScale * 10) / 10;
-					newScale = Math.min(MAX_SCALE, newScale);
-				} while (--ticks && newScale < MAX_SCALE);
-				pdfDoc.currentScaleValue = newScale;
-				renderPage(pageNum);
-			}
-			document.getElementById('{$canvas_id}_zoom_in').addEventListener('click', onZoomIn);
-
-			function onZoomOut(ticks) {
-				let newScale = pdfDoc.currentScaleValue;
-				do {
-					newScale = (newScale / DEFAULT_SCALE_DELTA).toFixed(2);
-					newScale = Math.floor(newScale * 10) / 10;
-					newScale = Math.max(MIN_SCALE, newScale);
-				} while (--ticks && newScale > MIN_SCALE);
-				pdfDoc.currentScaleValue = newScale;
-				renderPage(pageNum);
-			}
-			document.getElementById('{$canvas_id}_zoom_out').addEventListener('click', onZoomOut);
-
-			/**
-			 * Asynchronously downloads PDF.
-			 */
-			pdfjsLib.getDocument({ url: epgf_{$this->id}.url_pdf, verbosity: 0 }).promise.then(function(pdfDoc_) {
-				if (pdfDoc) {
-					pdfDoc.destroy();
-				}
-				pdfDoc = pdfDoc_;
-				document.getElementById('{$canvas_id}_page_count').textContent = pdfDoc.numPages;
-				pdfDoc.currentScaleValue = epgf_{$this->id}.initial_scale ?? epgf.initial_scale;
-
-				// Blow up the canvas to 100% width before rendering
-				canvas.style.width = '100%';
-
-				// Initial/first page rendering
-				renderPage(pageNum);
-
-				// Disable the Previous or Next buttons depending on page count.
-				togglePrevNextButtons();
-			}).catch(function(error){
-				console.log(error);
-				// Display an error on the front-end.
-				const el = document.querySelector('#{$field_id} .ginput_container_pdf_viewer');
-				if ( el && error.message ) {
-					var msg = '<p><b>" . __( 'PDF Viewer Error:', 'embed-pdf-gravityforms' ) . "</b> ' + error.message;
-					if ( epgf.is_user_logged_in ) {
-						msg += ' <a href=\"https://breakfastco.xyz/embed-pdf-for-gravity-forms/#troubleshooting\">" . __( 'Troubleshooting →', 'embed-pdf-gravityforms' ) . "</a>';
-					}
-					msg += '</p>';
-					el.innerHTML += msg;
-				}
-				// Hide the broken controls.
-				const controlEls = document.querySelectorAll( '#{$field_id} .epgf-controls-container, #{$field_id} .epgf-container' ).forEach( function( el ) { el.style.display ='none'; });
+		var epgf_{$this->id} = {
+				canvas: document.getElementById('$canvas_id'),
+				canvasId: '{$canvas_id}',
+				initialScale: {$this->initialScale} ?? epgf_pdfjs_strings.initialScale,
+				pageNum: 1,
+				pageNumPending: null,
+				pageRendering: false,
+				pdfDoc: null,
+				urlPdf: '{$url}',
+			};
+			window.addEventListener( 'load', function () {
+				document.getElementById('{$canvas_id}_prev').addEventListener('click', onPrevPage);
+				document.getElementById('{$canvas_id}_next').addEventListener('click', onNextPage);
+				document.getElementById('{$canvas_id}_zoom_in').addEventListener('click', onZoomIn);
+				document.getElementById('{$canvas_id}_zoom_out').addEventListener('click', onZoomOut);
+				loadPreview( {$this->id}, epgf_{$this->id}.url_pdf, '{$canvas_id}', {$form_id}, epgf_{$this->id}.initial_scale ?? epgf_pdfjs_strings.initial_scale );
 			});
-		});
 		</script>";
 	}
 
