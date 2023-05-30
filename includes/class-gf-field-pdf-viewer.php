@@ -177,7 +177,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 				document.getElementById('{$canvas_id}_next').addEventListener('click', onNextPage);
 				document.getElementById('{$canvas_id}_zoom_in').addEventListener('click', onZoomIn);
 				document.getElementById('{$canvas_id}_zoom_out').addEventListener('click', onZoomOut);
-				loadPreview( {$this->id}, epgf_{$this->id}.url_pdf, '{$canvas_id}', {$form_id}, epgf_{$this->id}.initial_scale ?? epgf_pdfjs_strings.initial_scale );
+				loadPreview( {$this->id}, {$form_id} );
 			});
 		</script>";
 	}

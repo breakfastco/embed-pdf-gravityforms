@@ -4,8 +4,6 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 		return;
 	}
 
-	const { __ } = wp.i18n;
-
 	// Populate and update our text settings for initial scale and PDF URL.
 	var textSettings = {
 		'field_initial_scale': 'initialScale',
@@ -24,6 +22,7 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 					//if this works rewrite
 					if ( 'field_pdf_url' === key ) {
 						if ( '' !== this.value && epgf_pdf_viewer_strings.site_url !== this.value.substring( 0, epgf_pdf_viewer_strings.site_url.length ) ) {
+							const { __ } = wp.i18n;
 							setFieldError(
 								'pdf_url_setting',
 								'below',
@@ -237,6 +236,7 @@ function loadPreview( fieldId, formId ) {
 		// Display an error on the front-end.
 		const el = document.querySelector('#' + fieldElementId + ' .ginput_container_pdf_viewer');
 		if ( el && error.message ) {
+			const { __ } = wp.i18n;
 			var msg = '<p><b>' + __( 'PDF Viewer Error:', 'embed-pdf-gravityforms' ) + '</b> ' + error.message;
 			if ( epgf_pdfjs_strings.is_user_logged_in ) {
 				msg += ' <a href="https://breakfastco.xyz/embed-pdf-for-gravity-forms/#troubleshooting">' + __( 'Troubleshooting →', 'embed-pdf-gravityforms' ) + '</a>';
