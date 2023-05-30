@@ -88,18 +88,17 @@ if ( class_exists( 'GFAddOn' ) ) {
 		);
 
 		private static $_instance = null;
- 
+
 		public static function get_instance() {
 			if ( self::$_instance == null ) {
 				self::$_instance = new GF_Addon_PDF_Viewer();
 			}
-		 
 			return self::$_instance;
 		}
 
 		public function pre_init() {
 			parent::pre_init();
-		 
+
 			// Include the class that defines our PDF Viewer field.
 			if ( $this->is_gravityforms_supported() && class_exists( 'GF_Field' ) ) {
 				require_once dirname( EMBED_PDF_GRAVITYFORMS_PATH ) . '/includes/class-gf-field-pdf-viewer.php';
@@ -154,7 +153,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 		 * @return array
 		 */
 		public function scripts() {
-			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			$min     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			$scripts = array(
 				array(
 					// Need this JavaScript file or we can't load PDFs.
@@ -167,7 +166,6 @@ if ( class_exists( 'GFAddOn' ) ) {
 						array( 'field_types' => array( 'pdf_viewer' ) ),
 					),
 				),
-				//TODO this should only be admin
 				array(
 					'handle'  => 'epgf_pdf_viewer',
 					'src'     => plugins_url( "js/field-pdf-viewer{$min}.js", EMBED_PDF_GRAVITYFORMS_PATH ),
@@ -185,7 +183,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 		}
 
 		public function styles() {
-			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+			$min    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			$styles = array(
 				// Front-end.
 				array(
@@ -208,13 +206,5 @@ if ( class_exists( 'GFAddOn' ) ) {
 			);
 			return array_merge( parent::styles(), $styles );
 		}
-
-		// public function tooltips( $tooltips ) {
-		// 	$simple_tooltips = array(
-		// 		'input_class_setting' => sprintf( '<h6>%s</h6>%s', esc_html__( 'Input CSS Classes', 'simplefieldaddon' ), esc_html__( 'The CSS Class names to be added to the field input.', 'simplefieldaddon' ) ),
-		// 	);
-		 
-		// 	return array_merge( $tooltips, $simple_tooltips );
-		// }
 	}
 }
