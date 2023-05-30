@@ -105,7 +105,6 @@ if ( class_exists( 'GFAddOn' ) ) {
 			}
 
 			add_action( 'gform_field_standard_settings', array( $this, 'add_field_settings' ), 10, 2 );
-			add_action( 'gform_enqueue_scripts', array( $this, 'add_inline_script' ), 10, 3 );
 		}
 
 		public function add_field_settings( $level, $form_id ) {
@@ -134,19 +133,6 @@ if ( class_exists( 'GFAddOn' ) ) {
 			</li><?php
 		}
 
-		public function add_inline_script( $found_forms, $found_blocks, $post ) {
-			if ( wp_script_is( 'epgf_pdfjs' ) ) {
-				wp_add_inline_script(
-					'epgf_pdfjs',
-					'const epgf = ' . wp_json_encode( array(
-						'url_worker'        => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No unminimized version of this script included.
-						'initial_scale'     => self::DEFAULT_SCALE_VALUE,
-						'is_user_logged_in' => is_user_logged_in(),
-					) )
-				);
-			}
-		}
-
 		/**
 		 * Return the scripts which should be enqueued.
 		 *
@@ -158,12 +144,17 @@ if ( class_exists( 'GFAddOn' ) ) {
 				array(
 					// Need this JavaScript file or we can't load PDFs.
 					'handle'    => 'epgf_pdfjs',
-					'src'       => plugins_url( "js/pdfjs/pdf.min.js", EMBED_PDF_GRAVITYFORMS_PATH ), // No un-minimized version of this script included.
+					'src'       => plugins_url( 'js/pdfjs/pdf.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No un-minimized version of this script included.
 					'version'   => $this->_version,
 					'deps'      => array(),
 					'in_footer' => true,
 					'enqueue'   => array(
 						array( 'field_types' => array( 'pdf_viewer' ) ),
+					),
+					'strings'   => array(
+						'url_worker'        => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No unminimized version of this script included.
+						'initial_scale'     => self::DEFAULT_SCALE_VALUE,
+						'is_user_logged_in' => is_user_logged_in(),
 					),
 				),
 				array(
