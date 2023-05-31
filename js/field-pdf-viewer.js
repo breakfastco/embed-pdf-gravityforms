@@ -88,7 +88,9 @@ function handleChooseClick (e) {
 // Loading, paging, & zooming pdf.js viewers
 window.addEventListener( 'load', function(e) {
 	// The workerSrc property shall be specified.
-	pdfjsLib.GlobalWorkerOptions.workerSrc = epgf_pdfjs_strings.url_worker;
+	if ( 'undefined' !== typeof pdfjsLib ) {
+		pdfjsLib.GlobalWorkerOptions.workerSrc = epgf_pdfjs_strings.url_worker;
+	}
 });
 
 /**
@@ -212,6 +214,10 @@ function onZoomOut(e) {
 function loadPreview( fieldId, formId ) {
 	var epgfInstance = window['epgf_' + fieldId];
 	var fieldElementId = 'field_' + formId + '_' + fieldId;
+	if ( '' === epgfInstance.urlPdf ) {
+		// There is no PDF to load.
+		return;
+	}
 	/**
 	 * Asynchronously downloads PDF.
 	 */
