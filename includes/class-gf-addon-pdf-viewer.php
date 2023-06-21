@@ -106,7 +106,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 		 * @return GF_Addon_PDF_Viewer
 		 */
 		public static function get_instance() {
-			if ( self::$_instance == null ) {
+			if ( null === self::$_instance ) {
 				self::$_instance = new GF_Addon_PDF_Viewer();
 			}
 			return self::$_instance;
