@@ -1,4 +1,10 @@
 <?php
+/**
+ * PDF Viewer Add-on
+ *
+ * @package embed-pdf-gravityforms
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 if ( method_exists( 'GFForms', 'include_feed_addon_framework' ) ) {
@@ -6,6 +12,9 @@ if ( method_exists( 'GFForms', 'include_feed_addon_framework' ) ) {
 }
 
 if ( class_exists( 'GFAddOn' ) ) {
+	/**
+	 * GF_Addon_PDF_Viewer
+	 */
 	class GF_Addon_PDF_Viewer extends GFAddOn {
 
 		const DEFAULT_SCALE_VALUE = '1';
@@ -27,6 +36,8 @@ if ( class_exists( 'GFAddOn' ) ) {
 		protected $_min_gravityforms_version = '1.9';
 
 		/**
+		 * The add-on slug doubles as the key in which all the settings are stored. If this changes, also change uninstall.php where the string is hard-coded.
+		 *
 		 * @var $_slug  string The add-on slug doubles as the key in which all the settings are stored. If this changes, also change uninstall.php where the string is hard-coded.
 		 * @see get_slug()
 		 */
@@ -89,6 +100,11 @@ if ( class_exists( 'GFAddOn' ) ) {
 
 		private static $_instance = null;
 
+		/**
+		 * Get an instance of this class.
+		 *
+		 * @return GF_Addon_PDF_Viewer
+		 */
 		public static function get_instance() {
 			if ( self::$_instance == null ) {
 				self::$_instance = new GF_Addon_PDF_Viewer();
@@ -96,6 +112,11 @@ if ( class_exists( 'GFAddOn' ) ) {
 			return self::$_instance;
 		}
 
+		/**
+		 * Handles anything which requires early initialization.
+		 *
+		 * @return void
+		 */
 		public function pre_init() {
 			parent::pre_init();
 
@@ -107,6 +128,14 @@ if ( class_exists( 'GFAddOn' ) ) {
 			add_action( 'gform_field_standard_settings', array( $this, 'add_field_settings' ), 10, 2 );
 		}
 
+		/**
+		 * Outputs HTML that renders the PDF section of the field settings
+		 * sidebar.
+		 *
+		 * @param  int $level Specify the position that the settings should be displayed.
+		 * @param  int $form_id The ID of the form for which the settings are presented.
+		 * @return void
+		 */
 		public function add_field_settings( $level, $form_id ) {
 			if ( 20 !== $level ?? 0 ) {
 				return;
@@ -173,6 +202,11 @@ if ( class_exists( 'GFAddOn' ) ) {
 			return array_merge( parent::scripts(), $scripts );
 		}
 
+		/**
+		 * Return the styles which should be enqueued.
+		 *
+		 * @return array
+		 */
 		public function styles() {
 			$min    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 			$styles = array(
