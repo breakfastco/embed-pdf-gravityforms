@@ -21,7 +21,21 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 
 					//if this works rewrite
 					if ( 'field_pdf_url' === key ) {
-						if ( '' !== this.value && epgf_pdf_viewer_strings.site_url !== this.value.substring( 0, epgf_pdf_viewer_strings.site_url.length ) ) {
+						if ( '' === this.value ) {
+							resetFieldError( 'pdf_url_setting' );
+							return;
+						}
+
+						// Is it a valid URL?
+						if ( ! isValidHttpUrl( this.value ) ) {
+							const { __ } = wp.i18n;
+							setFieldError(
+								'pdf_url_setting',
+								'below',
+								__( 'Please enter a valid URL.', 'embed-pdf-gravityforms' )
+							);
+						// Is it a local URL?
+						} else if ( epgf_pdf_viewer_strings.site_url !== this.value.substring( 0, epgf_pdf_viewer_strings.site_url.length ) ) {
 							const { __ } = wp.i18n;
 							setFieldError(
 								'pdf_url_setting',
@@ -83,6 +97,18 @@ function handleChooseClick (e) {
 
 	// Don't submit forms.
 	return false;
+}
+
+function isValidHttpUrl(string) {
+	let url;
+
+	try {
+		url = new URL(string);
+	} catch (_) {
+		return false;
+	}
+
+	return url.protocol === "http:" || url.protocol === "https:";
 }
 
 // Loading, paging, & zooming pdf.js viewers
