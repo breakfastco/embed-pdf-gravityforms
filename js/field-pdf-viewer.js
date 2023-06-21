@@ -69,7 +69,7 @@ function handleChooseClick (e) {
 		var attachment = file_frame.state().get('selection').first().toJSON();
 		var urlEl = document.getElementById('field_pdf_url');
 		if ( ! urlEl ) {
-			urlEl = document.getElementById('pdf_url');
+			urlEl = document.getElementById('url_pdf'); // Feed settings input.
 		}
 		if ( urlEl && attachment.url ) {
 			urlEl.value = attachment.url;
@@ -210,7 +210,6 @@ function onZoomOut(e) {
 	const event = new CustomEvent( 'epgf_scale_value', { detail: newScale });
 	window.dispatchEvent(event);
 }
-
 function loadPreview( fieldId, formId ) {
 	var epgfInstance = window['epgf_' + fieldId];
 	var fieldElementId = 'field_' + formId + '_' + fieldId;
