@@ -6,8 +6,8 @@ Requires at least: 4.0
 Tested up to: 6.2.2
 Requires PHP: 5.6
 Stable tag: 3.1.1
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
 An add-on for Gravity Forms. Provides a PDF Viewer field.
 

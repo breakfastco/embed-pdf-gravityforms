@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Author: Breakfast Co.
  * Author URI: https://breakfastco.xyz
  * Version: 1.0.0
+ * License: GPLv3
  * Text Domain: 'embed-pdf-gravityforms'
  */
 
