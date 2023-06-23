@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Plugin Name: Embed PDF for Gravity Forms
- * Plugin URI: https://breakfastco.xyz
+ * Plugin URI: https://breakfastco.xyz/embed-pdf-gravityforms
  * Description: Add-on for Gravity Forms. Provides a PDF Viewer field.
  * Author: Breakfast Co.
  * Author URI: https://breakfastco.xyz
