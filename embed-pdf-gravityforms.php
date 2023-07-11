@@ -18,8 +18,12 @@ defined( 'ABSPATH' ) || exit;
  * Text Domain: 'embed-pdf-gravityforms'
  */
 
-define( 'EMBED_PDF_GRAVITYFORMS_PATH', __FILE__ );
-define( 'EMBED_PDF_GRAVITYFORMS_VERSION', '1.0.0' );
+if ( ! defined( 'EMBED_PDF_GRAVITYFORMS_PATH' ) ) {
+	define( 'EMBED_PDF_GRAVITYFORMS_PATH', __FILE__ );
+}
+if ( ! defined( 'EMBED_PDF_GRAVITYFORMS_VERSION' ) ) {
+	define( 'EMBED_PDF_GRAVITYFORMS_VERSION', '1.0.0' );
+}
 
 add_action( 'gform_loaded', 'embed_pdf_gravityforms_init', 5 );
 /**
