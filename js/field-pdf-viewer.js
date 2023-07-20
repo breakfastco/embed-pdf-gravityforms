@@ -17,6 +17,7 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 			// Update the setting when users change the value.
 			[ 'input', 'propertychange' ].forEach(function(e){
 				el.addEventListener(e, function() {
+					// SetFieldProperty defined in gravityforms/js/form_editor.js
 					SetFieldProperty(textSettings[key], this.value);
 
 					//if this works rewrite

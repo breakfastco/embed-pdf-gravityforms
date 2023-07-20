@@ -147,6 +147,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		$field_id  = sprintf( 'field_%s_%s', $form_id, $this->id );
 		$canvas_id = $field_id . '_embed_pdf_gravityforms';
 
+		// Output the viewer canvas and controls.
 		return sprintf(
 			'<div class="ginput_container ginput_container_pdf_viewer"><div class="epgf-controls-container">'
 				// Paging controls.
