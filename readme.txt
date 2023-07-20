@@ -5,7 +5,7 @@ Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
 Tested up to: 6.2.2
 Requires PHP: 5.6
-Stable tag: 3.1.1
+Stable tag: 1.0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
