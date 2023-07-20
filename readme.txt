@@ -50,6 +50,7 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 == Changelog ==
 
 = 1.0.1 =
+* [Fixed] Corrects stable tag to 1.0.1. The previous version had an incorrect stable tag version of 3.1.1.
 * [Fixed] Prevent errors around defining constants if a user accidentally runs two copies of the plugin.
 * [Fixed] Updates LICENSE with a copy of the GPLv3.
 
