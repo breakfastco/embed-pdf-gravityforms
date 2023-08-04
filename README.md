@@ -2,3 +2,5 @@
 
 # embed-pdf-gravityforms
 WordPress plugin. Add-on for Gravity Forms. Provides a PDF Viewer field.
+
+[Documentation at breakfastco.xyz →](https://breakfastco.xyz/embed-pdf-gravityforms/)
