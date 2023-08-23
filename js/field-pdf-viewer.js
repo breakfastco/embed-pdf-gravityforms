@@ -36,7 +36,7 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 								__( 'Please enter a valid URL.', 'embed-pdf-gravityforms' )
 							);
 						// Is it a local URL?
-						} else if ( epgf_pdf_viewer_strings.site_url !== this.value.substring( 0, epgf_pdf_viewer_strings.site_url.length ) ) {
+						} else if ( epdf_gf_pdf_viewer_strings.site_url !== this.value.substring( 0, epdf_gf_pdf_viewer_strings.site_url.length ) ) {
 							const { __ } = wp.i18n;
 							setFieldError(
 								'pdf_url_setting',

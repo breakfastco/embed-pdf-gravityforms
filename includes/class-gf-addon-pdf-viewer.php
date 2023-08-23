@@ -187,7 +187,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 					),
 				),
 				array(
-					'handle'  => 'epgf_pdf_viewer',
+					'handle'  => 'epdf_gf_pdf_viewer',
 					'src'     => plugins_url( "js/field-pdf-viewer{$min}.js", EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version' => $this->_version,
 					'deps'    => array( 'wp-i18n' ),
