@@ -154,7 +154,7 @@ function renderPage( epgfInstance, pageNum ) {
 			epgfInstance.canvas.style.width = epgfInstance.canvas.width + 'px';
 
 			// Dispatch an event after a page render.
-			const event = new CustomEvent( 'epgf_render_page', { detail: epgfInstance.pageNum });
+			const event = new CustomEvent( 'epdf_render_page', { detail: epgfInstance.pageNum });
 			window.dispatchEvent(event);
 		});
 	});
