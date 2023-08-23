@@ -116,7 +116,7 @@ function isValidHttpUrl(string) {
 window.addEventListener( 'load', function(e) {
 	// The workerSrc property shall be specified.
 	if ( 'undefined' !== typeof pdfjsLib ) {
-		pdfjsLib.GlobalWorkerOptions.workerSrc = epgf_pdfjs_strings.url_worker;
+		pdfjsLib.GlobalWorkerOptions.workerSrc = epdf_gf_pdfjs_strings.url_worker;
 	}
 });
 
@@ -270,7 +270,7 @@ function loadPreview( fieldId, formId ) {
 		if ( el && error.message ) {
 			const { __ } = wp.i18n;
 			var msg = '<p><b>' + __( 'PDF Viewer Error:', 'embed-pdf-gravityforms' ) + '</b> ' + error.message;
-			if ( epgf_pdfjs_strings.is_user_logged_in ) {
+			if ( epdf_gf_pdfjs_strings.is_user_logged_in ) {
 				msg += ' <a href="https://breakfastco.xyz/embed-pdf-for-gravity-forms/#troubleshooting">' + __( 'Troubleshooting →', 'embed-pdf-gravityforms' ) + '</a>';
 			}
 			msg += '</p>';

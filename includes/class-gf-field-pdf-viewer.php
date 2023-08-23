@@ -169,7 +169,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		var epgf_{$this->id} = {
 				canvas: document.getElementById('$canvas_id'),
 				canvasId: '{$canvas_id}',
-				initialScale: {$this->initialScale} ?? epgf_pdfjs_strings.initialScale,
+				initialScale: {$this->initialScale} ?? epdf_gf_pdfjs_strings.initialScale,
 				pageNum: 1,
 				pageNumPending: null,
 				pageRendering: false,

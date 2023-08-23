@@ -172,7 +172,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 			$scripts = array(
 				array(
 					// Need this JavaScript file or we can't load PDFs.
-					'handle'    => 'epgf_pdfjs',
+					'handle'    => 'epdf_gf_pdfjs',
 					'src'       => plugins_url( 'js/pdfjs/pdf.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No un-minimized version of this script included.
 					'version'   => $this->_version,
 					'deps'      => array(),
