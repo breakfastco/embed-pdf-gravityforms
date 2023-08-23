@@ -177,7 +177,7 @@ function queueRenderPage(epdfInstance) {
  * Displays previous page.
  */
 function onPrevPage(e) {
-	var epdfInstance = window['epgf_' + e.target.dataset.viewerId];
+	var epdfInstance = window['epdf_' + e.target.dataset.viewerId];
 	if (epdfInstance.pageNum <= 1) {
 		return;
 	}
@@ -189,7 +189,7 @@ function onPrevPage(e) {
  * Displays next page.
  */
 function onNextPage(e) {
-	var epdfInstance = window['epgf_' + e.target.dataset.viewerId];
+	var epdfInstance = window['epdf_' + e.target.dataset.viewerId];
 	if (epdfInstance.pageNum >= epdfInstance.pdfDoc.numPages) {
 		return;
 	}
@@ -212,7 +212,7 @@ function scaleMax() {
 }
 
 function onZoomIn(e) {
-	var epdfInstance = window['epgf_' + e.target.dataset.viewerId];
+	var epdfInstance = window['epdf_' + e.target.dataset.viewerId];
 	let newScale = epdfInstance.pdfDoc.currentScaleValue;
 	newScale = (newScale * scaleDeltaDefault()).toFixed(2);
 	newScale = Math.ceil(newScale * 10) / 10;
@@ -225,7 +225,7 @@ function onZoomIn(e) {
 	window.dispatchEvent(event);
 }
 function onZoomOut(e) {
-	var epdfInstance = window['epgf_' + e.target.dataset.viewerId];
+	var epdfInstance = window['epdf_' + e.target.dataset.viewerId];
 	let newScale = epdfInstance.pdfDoc.currentScaleValue;
 	newScale = (newScale / scaleDeltaDefault()).toFixed(2);
 	newScale = Math.floor(newScale * 10) / 10;
@@ -238,7 +238,7 @@ function onZoomOut(e) {
 	window.dispatchEvent(event);
 }
 function loadPreview( fieldId, formId ) {
-	var epdfInstance = window['epgf_' + fieldId];
+	var epdfInstance = window['epdf_' + fieldId];
 	var fieldElementId = 'field_' + formId + '_' + fieldId;
 	if ( '' === epdfInstance.urlPdf ) {
 		// There is no PDF to load.

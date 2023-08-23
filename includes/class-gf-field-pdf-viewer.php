@@ -166,7 +166,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			esc_attr( $this->id )
 		)
 			. "<script type=\"text/javascript\">
-		var epgf_{$this->id} = {
+		var epdf_{$this->id} = {
 				canvas: document.getElementById('$canvas_id'),
 				canvasId: '{$canvas_id}',
 				initialScale: {$this->initialScale} ?? epdf_gf_pdfjs_strings.initialScale,
