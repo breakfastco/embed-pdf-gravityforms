@@ -28,24 +28,24 @@ canvas.epgf{
 }
 
 /* Space between controls and the top of the PDF */
-.epgf-controls-container{
+.epdf-controls-container{
 	padding-bottom: .95em;
 	line-height: 3em; /* If the controls wrap to multiple lines */
 }
 /* Space between buttons and "Page: 1 / 2" */
-.epgf-controls-container span.paging{
+.epdf-controls-container span.paging{
 	padding-left: 1em;
 	padding-right: 1em;
 }
 /* Wrap the Zoom In and Out buttons on smaller screens */
 @media (max-width: 768px ) {
-	.epgf-controls-container span.zoom{
+	.epdf-controls-container span.zoom{
 		display: block;
 	}
 }
 /* Wrap the "Page: 1 / 2" on smaller screens */
 @media (max-width: 480px ) {
-	.epgf-controls-container span.paging{
+	.epdf-controls-container span.paging{
 		display: block;
 		padding-left: .3em;
 	}

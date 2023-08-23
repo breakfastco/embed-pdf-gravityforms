@@ -149,7 +149,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 
 		// Output the viewer canvas and controls.
 		return sprintf(
-			'<div class="ginput_container ginput_container_pdf_viewer"><div class="epgf-controls-container">'
+			'<div class="ginput_container ginput_container_pdf_viewer"><div class="epdf-controls-container">'
 				// Paging controls.
 				. '<button class="button" onclick="return false" id="%1$s_prev" data-viewer-id="%7$s" title="%2$s">%2$s</button> <button class="button" onclick="return false" id="%1$s_next" data-viewer-id="%7$s" title="%3$s">%3$s</button> '
 				. '<span class="paging">%4$s <span id="%1$s_page_num"></span> / <span id="%1$s_page_count"></span></span> '
