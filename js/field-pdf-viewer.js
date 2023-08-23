@@ -277,6 +277,6 @@ function loadPreview( fieldId, formId ) {
 			el.innerHTML += msg;
 		}
 		// Hide the broken controls.
-		const controlEls = document.querySelectorAll( '#' + fieldElementId + ' .epgf-controls-container, #' + fieldElementId + ' .epgf-container' ).forEach( function( el ) { el.style.display ='none'; });
+		const controlEls = document.querySelectorAll( '#' + fieldElementId + ' .epgf-controls-container, #' + fieldElementId + ' .epdf-container' ).forEach( function( el ) { el.style.display ='none'; });
 	});
 }

@@ -1,4 +1,4 @@
-div.epgf-container{
+div.epdf-container{
 	overflow: auto; /* Allow scolling to see PDFs larger than the display viewport */
 }
 canvas.epgf{
