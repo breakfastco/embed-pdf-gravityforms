@@ -221,7 +221,7 @@ function onZoomIn(e) {
 	renderPage(epdfInstance, epdfInstance.pageNum);
 
 	// Dispatch an event about the new scale value.
-	const event = new CustomEvent( 'epgf_scale_value', { detail: newScale });
+	const event = new CustomEvent( 'epdf_scale_value', { detail: newScale });
 	window.dispatchEvent(event);
 }
 function onZoomOut(e) {
@@ -234,7 +234,7 @@ function onZoomOut(e) {
 	renderPage(epdfInstance, epdfInstance.pageNum);
 
 	// Dispatch an event about the new scale value.
-	const event = new CustomEvent( 'epgf_scale_value', { detail: newScale });
+	const event = new CustomEvent( 'epdf_scale_value', { detail: newScale });
 	window.dispatchEvent(event);
 }
 function loadPreview( fieldId, formId ) {
