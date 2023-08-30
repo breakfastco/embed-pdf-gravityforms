@@ -3,9 +3,9 @@
 Contributors: salzano
 Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
-Tested up to: 6.2.2
+Tested up to: 6.3.0
 Requires PHP: 5.6
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
@@ -48,6 +48,10 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 
 == Changelog ==
+
+= 1.0.2 =
+* [Fixed] Save the PDF URL with the entry when the form is submitted.
+* [Changed] Changes the tested up to version to 6.3.0.
 
 = 1.0.1 =
 * [Fixed] Corrects stable tag to 1.0.1. The previous version had an incorrect stable tag version of 3.1.1.
