@@ -116,20 +116,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
 
-		// The user might have chosen a PDF and saved it with the form.
-		$url = $this->pdfUrl;
-		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
-			$url = '';
-		}
-
-		// Do we have a PDF URL via Dynamic Population?
-		if ( ! empty( $value ) ) {
-			// Is the populated value a URL?
-			if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
-				// Yes.
-				$url = esc_url( $value );
-			}
-		}
+		$url = $this->get_url( $value );
 
 		// Do we even have a PDF?
 		if ( empty( $url ) ) {
@@ -208,6 +195,53 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			esc_html__( 'This is a content placeholder. PDFs are not displayed in the form admin. Preview this form to view the content.', 'embed-pdf-gravityforms' )
 		);
 		return ! is_admin() ? '{FIELD}' : $field_content;
+	}
+
+	/**
+	 * Made of code copied out of form_display.php and webapi.php. Get the field
+	 * value via Dynamic Population or $_POST to replicate the first argument to
+	 * $this->get_field_content().
+	 *
+	 * @return string
+	 */
+	public function get_field_dynamic_value() {
+		if ( ! $this->allowsPrepopulate ) {
+			return '';
+		}
+
+		$field_value = GFForms::post( 'input_' . $this->id );
+		if ( ! empty( $field_value ) ) {
+			return $field_value;
+		}
+
+		$field_value = GFForms::get( $this->inputName );
+		return $field_value;
+	}
+
+	/**
+	 * Returns the URL of a PDF this field should display defined by the field
+	 * settings in the editor or dynamic population.
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	public function get_url( $value ) {
+		// The user might have chosen a PDF and saved it with the form.
+		$url = $this->pdfUrl;
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+			$url = '';
+		}
+
+		// Do we have a PDF URL via Dynamic Population, $_POST, or partial entry?
+		if ( is_string( $value ) && '' !== $value ) {
+			// Is the populated value a URL?
+			if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
+				// Yes.
+				$url = esc_url( $value );
+			}
+		}
+
+		return $url;
 	}
 
 	/**
