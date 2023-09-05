@@ -1,6 +1,6 @@
 // After field settings are loaded in the form editor.
 gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
-	if ( 'pdf_viewer' !== field[0].type ) {
+	if ( epdf_gf_pdf_viewer_strings.field_type !== field[0].type ) {
 		return;
 	}
 

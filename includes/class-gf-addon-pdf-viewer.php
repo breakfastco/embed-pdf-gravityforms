@@ -18,6 +18,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 	class GF_Addon_PDF_Viewer extends GFAddOn {
 
 		const DEFAULT_SCALE_VALUE = '1';
+		const FIELD_TYPE          = 'pdf_viewer';
 
 		/**
 		 * Defines the version of the Gravity Forms Quote Tracker Writer Add-On.
@@ -178,7 +179,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'deps'      => array(),
 					'in_footer' => true,
 					'enqueue'   => array(
-						array( 'field_types' => array( 'pdf_viewer' ) ),
+						array( 'field_types' => array( self::FIELD_TYPE ) ),
 					),
 					'strings'   => array(
 						'url_worker'        => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No unminimized version of this script included.
@@ -192,10 +193,12 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'version' => $this->_version,
 					'deps'    => array( 'wp-i18n' ),
 					'strings' => array(
-						'site_url' => site_url(),
+						'site_url'     => site_url(),
+						'field_type'   => self::FIELD_TYPE,
+						'script_debug' => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 					),
 					'enqueue' => array(
-						array( 'field_types' => array( 'pdf_viewer' ) ),
+						array( 'field_types' => array( self::FIELD_TYPE ) ),
 					),
 				),
 			);
@@ -216,7 +219,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'src'     => plugins_url( "css/viewer{$min}.css", EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version' => $this->_version,
 					'enqueue' => array(
-						array( 'field_types' => array( 'pdf_viewer' ) ),
+						array( 'field_types' => array( self::FIELD_TYPE ) ),
 					),
 				),
 				// Form editor.

@@ -22,7 +22,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 	 *
 	 * @var string
 	 */
-	public $type = 'pdf_viewer';
+	public $type = GF_Addon_PDF_Viewer::FIELD_TYPE;
 
 	/**
 	 * Returns the field title.
