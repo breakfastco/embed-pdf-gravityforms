@@ -244,6 +244,20 @@ function loadPreview( fieldId, formId ) {
 		// There is no PDF to load.
 		return;
 	}
+
+	const controls = {
+		'prev': 'onPrevPage',
+		'next': 'onNextPage',
+		'zoom_in': 'onZoomIn',
+		'zoom_out': 'onZoomOut'
+	};
+	Object.keys(controls).forEach(function(key, index){
+		var el = document.getElementById( epdfInstance.canvasId + '_' + key);
+		if ( el ) {
+			el.addEventListener('click', window[controls[key]]);
+		}
+	});
+
 	/**
 	 * Asynchronously downloads PDF.
 	 */

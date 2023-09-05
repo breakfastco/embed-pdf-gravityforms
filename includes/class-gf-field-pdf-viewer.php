@@ -154,26 +154,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			esc_html__( 'Zoom In', 'embed-pdf-gravityforms' ),
 			esc_attr( $this->id ),
 			esc_attr( $url )
-		)
-			. "<script type=\"text/javascript\">
-		var epdf_{$this->id} = {
-				canvas: document.getElementById('$canvas_id'),
-				canvasId: '{$canvas_id}',
-				initialScale: {$this->initialScale} ?? epdf_gf_pdfjs_strings.initialScale,
-				pageNum: 1,
-				pageNumPending: null,
-				pageRendering: false,
-				pdfDoc: null,
-				urlPdf: '{$url}',
-			};
-			window.addEventListener( 'load', function () {
-				document.getElementById('{$canvas_id}_prev').addEventListener('click', onPrevPage);
-				document.getElementById('{$canvas_id}_next').addEventListener('click', onNextPage);
-				document.getElementById('{$canvas_id}_zoom_in').addEventListener('click', onZoomIn);
-				document.getElementById('{$canvas_id}_zoom_out').addEventListener('click', onZoomOut);
-				loadPreview( {$this->id}, {$form_id} );
-			});
-		</script>";
+		);
 	}
 
 	/**
@@ -254,6 +235,40 @@ class GF_Field_PDF_Viewer extends GF_Field {
 		// Logging is officially supported in Add-ons not Fields.
 		$addon = GF_Addon_PDF_Viewer::get_instance();
 		$addon->log_error( $message );
+	}
+
+	/**
+	 * Adds an initialization script for this field to the form.
+	 *
+	 * @param  array $form
+	 * @return void
+	 */
+	public function register_form_init_scripts( $form ) {
+		$form_id = $form['id'];
+		$script  = '';
+
+		$field_element_id = sprintf( 'field_%s_%s', $form_id, $this->id );
+		$canvas_id        = $field_element_id . '_embed_pdf_gravityforms';
+		$url              = $this->get_url( $this->get_field_dynamic_value() );
+
+		// The str_replace() call removes some whitespace characters.
+		$script .= str_replace(
+			array( PHP_EOL, "\t" ),
+			'',
+			"window['epdf_{$this->id}'] = {
+				canvas: document.getElementById('{$canvas_id}'),
+				canvasId: '{$canvas_id}',
+				initialScale: {$this->initialScale} ?? epdf_gf_pdfjs_strings.initialScale,
+				pageNum: 1,
+				pageNumPending: null,
+				pageRendering: false,
+				pdfDoc: null,
+				urlPdf: '{$url}',
+			}; loadPreview( {$this->id}, {$form_id} );"
+		);
+		if ( '' !== $script ) {
+			GFFormDisplay::add_init_script( $form_id, GF_Addon_PDF_Viewer::FIELD_TYPE . '_' . $this->id, GFFormDisplay::ON_PAGE_RENDER, $script );
+		}
 	}
 
 	/**
