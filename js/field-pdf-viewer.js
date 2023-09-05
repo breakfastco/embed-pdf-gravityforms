@@ -240,8 +240,19 @@ function onZoomOut(e) {
 function loadPreview( fieldId, formId ) {
 	var epdfInstance = window['epdf_' + fieldId];
 	var fieldElementId = 'field_' + formId + '_' + fieldId;
+	if ( 'undefined' === typeof epdfInstance ) {
+		// Something is wrong, spin up data for this this preview is missing.
+		if ( epdf_gf_pdf_viewer_strings.script_debug ) {
+			console.log( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, spin up data missing' );
+		}
+		return;
+	}
+
 	if ( '' === epdfInstance.urlPdf ) {
 		// There is no PDF to load.
+		if ( epdf_gf_pdf_viewer_strings.script_debug ) {
+			console.log( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, no PDF URL' );
+		}
 		return;
 	}
 
@@ -278,7 +289,10 @@ function loadPreview( fieldId, formId ) {
 		// Disable the Previous or Next buttons depending on page count.
 		togglePrevNextButtons(epdfInstance);
 	}).catch(function(error){
-		console.log(error);
+		if ( epdf_gf_pdf_viewer_strings.script_debug ) {
+			console.log( '[Embed PDF for Gravity Forms]' );
+			console.log( error );
+		}
 		// Display an error on the front-end.
 		const el = document.querySelector('#' + fieldElementId + ' .ginput_container_pdf_viewer');
 		if ( el && error.message ) {
