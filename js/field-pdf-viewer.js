@@ -4,64 +4,74 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 		return;
 	}
 
-	// Populate and update our text settings for initial scale and PDF URL.
-	var textSettings = {
-		'field_initial_scale': 'initialScale',
-		'field_pdf_url':       'pdfUrl',
-	};
-	Object.keys(textSettings).forEach(key=>{
-		var el = document.getElementById(key);
-		if ( el ) {
-			// Populate the setting value.
-			el.value = rgar( field[0], textSettings[key] );
-			// Update the setting when users change the value.
-			[ 'input', 'propertychange' ].forEach(function(e){
-				el.addEventListener(e, function() {
-					// SetFieldProperty defined in gravityforms/js/form_editor.js
-					SetFieldProperty(textSettings[key], this.value);
+	// Populate initial scale setting.
+	var elements = [];
+	elements.push(document.getElementById( 'field_initial_scale' ));
+	var keys = [];
+	keys.push( 'initialScale' );
+	if ( elements[0] ) {
+		// Populate the setting value.
+		elements[0].value = rgar( field[0], keys[0] );
+		// Update the setting when users change the value.
+		[ 'input', 'propertychange' ].forEach(function(e){
+			elements[0].addEventListener(e, function() {
+				// SetFieldProperty defined in gravityforms/js/form_editor.js
+				SetFieldProperty( keys[0], this.value );
+			} );
+		} );
+		// Fire input events so errors show as soon as the field is selected.
+		elements[0].dispatchEvent(new Event('input'));
+	}
 
-					//if this works rewrite
-					if ( 'field_pdf_url' === key ) {
-						if ( '' === this.value ) {
-							resetFieldError( 'pdf_url_setting' );
-							return;
-						}
+	// Populate PDF URL setting.
+	elements.push(document.getElementById( 'field_pdf_url' ));
+	keys.push( 'pdfUrl' );
+	if ( elements[1] ) {
+		// Populate the setting value.
+		elements[1].value = rgar( field[0], keys[1] );
+		// Update the setting when users change the value.
+		[ 'input', 'propertychange' ].forEach(function(e){
+			elements[1].addEventListener(e, function() {
+				// SetFieldProperty defined in gravityforms/js/form_editor.js
+				SetFieldProperty( keys[1], this.value );
 
-						// Is it a valid URL?
-						if ( ! isValidHttpUrl( this.value ) ) {
-							const { __ } = wp.i18n;
-							setFieldError(
-								'pdf_url_setting',
-								'below',
-								__( 'Please enter a valid URL.', 'embed-pdf-gravityforms' )
-							);
-						// Is it a local URL?
-						} else if ( epdf_gf_pdf_viewer_strings.site_url !== this.value.substring( 0, epdf_gf_pdf_viewer_strings.site_url.length ) ) {
-							const { __ } = wp.i18n;
-							setFieldError(
-								'pdf_url_setting',
-								'below',
-								__( 'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer.', 'embed-pdf-gravityforms' )
-									+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">' + __( 'Learn about CORS →', 'embed-pdf-gravityforms' ) + '</a>'
-									//+ '<p><button class="gform-button gform-button--white">Download PDF into Media Library</button></p>'
-							);
-						} else {
-							resetFieldError( 'pdf_url_setting' );
-						}
-					}
+				if ( '' === this.value ) {
+					resetFieldError( 'pdf_url_setting' );
+					return;
+				}
 
-				});
+				// Is it a valid URL?
+				if ( ! isValidHttpUrl( this.value ) ) {
+					const { __ } = wp.i18n;
+					setFieldError(
+						'pdf_url_setting',
+						'below',
+						__( 'Please enter a valid URL.', 'embed-pdf-gravityforms' )
+					);
+				// Is it a local URL?
+				} else if ( epdf_gf_pdf_viewer_strings.site_url !== this.value.substring( 0, epdf_gf_pdf_viewer_strings.site_url.length ) ) {
+					const { __ } = wp.i18n;
+					setFieldError(
+						'pdf_url_setting',
+						'below',
+						__( 'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer.', 'embed-pdf-gravityforms' )
+							+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">' + __( 'Learn about CORS →', 'embed-pdf-gravityforms' ) + '</a>'
+							//+ '<p><button class="gform-button gform-button--white">Download PDF into Media Library</button></p>'
+					);
+				} else {
+					resetFieldError( 'pdf_url_setting' );
+				}
 			});
-			// Fire input events so errors show as soon as the field is selected.
-			el.dispatchEvent(new Event('input'));
-		}
-	});
+		});
+		// Fire input events so errors show as soon as the field is selected.
+		elements[1].dispatchEvent(new Event('input'));
+	}
 
 	// Launch an upload media modal when the Choose PDF button is clicked.
-	el = document.getElementById('choose_pdf_url');
-	if ( el ) {
-		el.removeEventListener( 'click', handleChooseClick );
-		el.addEventListener( 'click', handleChooseClick );
+	elements.push(document.getElementById('choose_pdf_url'));
+	if ( elements[2] ) {
+		elements[2].removeEventListener( 'click', handleChooseClick );
+		elements[2].addEventListener( 'click', handleChooseClick );
 	}
 }, 10, 2 );
 
