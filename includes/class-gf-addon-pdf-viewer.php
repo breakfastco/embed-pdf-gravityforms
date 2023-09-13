@@ -193,12 +193,28 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'version' => $this->_version,
 					'deps'    => array( 'epdf_gf_pdfjs', 'wp-i18n' ),
 					'strings' => array(
-						'site_url'     => site_url(),
 						'field_type'   => self::FIELD_TYPE,
 						'script_debug' => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
 					),
 					'enqueue' => array(
-						array( 'field_types' => array( self::FIELD_TYPE ) ),
+						array(
+							'field_types' => array( self::FIELD_TYPE ),
+						),
+					),
+				),
+				array(
+					'handle'  => 'epdf_gf_form_editor',
+					'src'     => plugins_url( "js/form-editor{$min}.js", EMBED_PDF_GRAVITYFORMS_PATH ),
+					'version' => $this->_version,
+					'deps'    => array( 'jquery' ),
+					'strings' => array(
+						'field_type' => self::FIELD_TYPE,
+						'site_url'   => site_url(),
+					),
+					'enqueue' => array(
+						array(
+							'admin' => 'form_editor',
+						),
 					),
 				),
 			);
