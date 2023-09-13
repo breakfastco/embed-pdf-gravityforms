@@ -5,7 +5,7 @@ Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
 Tested up to: 6.3.0
 Requires PHP: 5.6
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
@@ -54,6 +54,10 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 
 == Changelog ==
+
+= 1.0.4 =
+* [Fixed] Splits scripting for the Form Editor out into its own file so only necessary scripts are loading in the form editor and on the front end where the field appears.
+* [Changed] Updates banner art.
 
 = 1.0.3 =
 * [Fixed] Moves inline JavaScript required for each PDF Viewer field to the register_form_init_scripts() method of the Gravity Forms Field Framework.
