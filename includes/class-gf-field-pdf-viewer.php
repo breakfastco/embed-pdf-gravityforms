@@ -123,6 +123,7 @@ class GF_Field_PDF_Viewer extends GF_Field {
 			// No.
 			// Are we on a feed settings page? This isn't a problem when configuring feeds in Inkless.
 			if ( 'form_settings_embedpdfviewerpro' !== GFForms::get_page() ) {
+				/* translators: 1. Gravity Forms field ID. 2. Gravity Forms form ID. */
 				$this->log_error( sprintf( __( 'No PDF to load into field %1$s on form %2$s', 'embed-pdf-gravityforms' ), $this->id, $form['id'] ) );
 				return;
 			}
