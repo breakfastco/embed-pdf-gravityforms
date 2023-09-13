@@ -16,7 +16,13 @@ An add-on for Gravity Forms. Provides a PDF Viewer field.
  
 Embed PDF for Gravity Forms provides a PDF Viewer field type. Include PDF files in forms without requiring users to download the PDF. Supports multi-page documents. Provides zoom controls.
 
-This plugin is free. If you need to help users sign PDFs, we offer a paid add-on that applies signatures to PDFs called [Inkless](https://breakfastco.xyz/inkless/).
+= Features = 
+
+* Drag a PDF Viewer field onto any Gravity Form
+* Choose PDF from Media Library or provide local URL
+* Supports multi-page PDFs
+* Supports Dynamic Population
+* Initial Scale setting changes default zoom level
 
 = Web page =
 
