@@ -37,16 +37,27 @@ canvas.epdf{
 	padding-left: 1em;
 	padding-right: 1em;
 }
-/* Wrap the Zoom In and Out buttons on smaller screens */
-@media (max-width: 768px ) {
-	.epdf-controls-container span.zoom{
-		display: block;
-	}
-}
-/* Wrap the "Page: 1 / 2" on smaller screens */
-@media (max-width: 480px ) {
+
+/**
+ * Target mobile at 700px because our Zoom Out button will wrap before Zoom In
+ * at 480px.
+ * Wrap the "Page: 1 / 2" on smaller screens so it splits the buttons. Make the
+ * buttons all the same width and spread as wide as allowed.
+ */
+@media (max-width: 700px ) {
 	.epdf-controls-container span.paging{
-		display: block;
 		padding-left: .3em;
+	}
+
+	.epdf-controls-container span.zoom,
+	.epdf-controls-container span.page{
+		display: flex;
+		justify-content: space-between;
+		gap: 1em;
+	}
+	.epdf-controls-container span.zoom button,
+	.epdf-controls-container span.page button{
+		flex-grow: 1;
+		flex-basis: 40%;
 	}
 }
