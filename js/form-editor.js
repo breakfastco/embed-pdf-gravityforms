@@ -8,6 +8,8 @@ gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
 	loadPdfViewerFieldEditorSettings( field[0] );
 }, 10, 2 );
 
+const { __ } = wp.i18n;
+
 function loadPdfViewerFieldEditorSettings( field ) {
 	if ( epdf_gf_form_editor_strings.field_type !== field.type ) {
 		return;
@@ -50,16 +52,15 @@ function loadPdfViewerFieldEditorSettings( field ) {
 				}
 
 				// Is it a valid URL?
-				if ( ! isValidHttpUrl( this.value ) ) {
-					const { __ } = wp.i18n;
+				if ( ! isValidHttpUrl( this.value ) ) { // isValidHttpUrl() defined in field-pdf-viewer.js
 					setFieldError(
 						'pdf_url_setting',
 						'below',
 						__( 'Please enter a valid URL.', 'embed-pdf-gravityforms' )
 					);
+					return;
 				// Is it a local URL?
 				} else if ( epdf_gf_form_editor_strings.site_url !== this.value.substring( 0, epdf_gf_form_editor_strings.site_url.length ) ) {
-					const { __ } = wp.i18n;
 					setFieldError(
 						'pdf_url_setting',
 						'below',
@@ -67,9 +68,17 @@ function loadPdfViewerFieldEditorSettings( field ) {
 							+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">' + __( 'Learn about CORS →', 'embed-pdf-gravityforms' ) + '</a>'
 							//+ '<p><button class="gform-button gform-button--white">Download PDF into Media Library</button></p>'
 					);
+					return;
 				} else {
 					resetFieldError( 'pdf_url_setting' );
 				}
+
+				// Does the file exist?
+				localFileExists( this.value ).then( exists => exists ? resetFieldError( 'pdf_url_setting' ) : setFieldError(
+					'pdf_url_setting',
+					'below',
+					__( 'No file exists at the provided URL.', 'embed-pdf-gravityforms' )
+				));
 			});
 		});
 		// Fire input events so errors show as soon as the field is selected.
@@ -84,10 +93,25 @@ function loadPdfViewerFieldEditorSettings( field ) {
 	}
 }
 
+const localFileExists = file => {
+	if ( epdf_gf_form_editor_strings.site_url !== file.substring( 0, epdf_gf_form_editor_strings.site_url.length ) ) {
+		return Promise.resolve(false);
+	}
+	const response = fetch(
+		file,
+		{
+			method: 'HEAD',
+			cache:'no-store',
+			credentials: 'omit',
+		}
+	).then(response => ( 200 === response.status && response.url === file))
+	.catch( exception => false );
+	return response;
+}
+
 // Choose PDF button click handler in form editor
 function handleChooseClick (e) {
 	e.preventDefault();
-	const { __ } = wp.i18n;
 	var file_frame = wp.media.frames.file_frame = wp.media({
 		title: __( 'Choose PDF', 'embed-pdf-gravityforms' ),
 		button: {
