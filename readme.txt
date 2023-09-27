@@ -55,6 +55,10 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 == Changelog ==
 
+= 1.0.5 =
+* [Fixed] Adds a "file not found" error to the form editor so users know that PDF files are missing without previewing the form
+* [Fixed] Changes CSS so the previous, next, zoom in, and zoom out buttons look better on smaller screens
+
 = 1.0.4 =
 * [Fixed] Splits scripting for the Form Editor out into its own file so only necessary scripts are loading in the form editor and on the front end where the field appears.
 * [Changed] Updates banner art.
