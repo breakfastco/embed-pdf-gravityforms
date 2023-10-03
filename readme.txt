@@ -24,7 +24,7 @@ Embed PDF for Gravity Forms provides a PDF Viewer field type. Include PDF files 
 * Supports Dynamic Population
 * Initial Scale setting changes default zoom level
 
-= Web page =
+= Demo =
 
 [https://breakfastco.xyz/embed-pdf-for-gravity-forms/](https://breakfastco.xyz/embed-pdf-for-gravity-forms/)
 

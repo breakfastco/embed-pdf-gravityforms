@@ -20,6 +20,10 @@
 		});
 	});
 
+	/**
+	 * Private Methods
+	 */
+
 	function canvasElement( fieldId, formId ) {
 		return document.querySelector( '.epdf-container canvas.epdf#field_' + formId + '_' + fieldId + '_embed_pdf_gravityforms' );
 	}
