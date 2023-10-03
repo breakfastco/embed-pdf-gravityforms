@@ -13,6 +13,8 @@
 	}
 
 	const { __ } = wp.i18n;
+	// Helps us abort promises during user input into the PDF URL field.
+	var controller = new AbortController();
 
 	function isValidHttpUrl(string) {
 		let url;
@@ -90,6 +92,7 @@
 					}
 
 					// Does the file exist?
+					controller.abort(); // Abort previous fetch in localFileExists().
 					localFileExists( this.value ).then( exists => exists ? resetFieldError( 'pdf_url_setting' ) : setFieldError(
 						'pdf_url_setting',
 						'below',
@@ -113,14 +116,18 @@
 		if ( epdf_gf_form_editor_strings.site_url !== file.substring( 0, epdf_gf_form_editor_strings.site_url.length ) ) {
 			return Promise.resolve(false);
 		}
+		controller = new AbortController();
 		const response = fetch(
 			file,
 			{
 				method: 'HEAD',
 				cache:'no-store',
 				credentials: 'omit',
+				signal: controller.signal,
 			}
-		).then(response => ( 200 === response.status && response.url === file))
+		).then(response => (
+			200 === response.status && response.url === file
+		))
 		.catch( exception => false );
 		return response;
 	}
