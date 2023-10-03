@@ -3,11 +3,14 @@
 	jQuery(document).on( 'gform_field_added', function( event, form, field ) {
 		loadPdfViewerFieldEditorSettings( field );
 	} );
-	// After field settings are loaded in the form editor when a field is selected.
-	// Also an equivalent jQuery event hook 'gform_load_field_settings'.
-	gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
-		loadPdfViewerFieldEditorSettings( field[0] );
-	}, 10, 2 );
+
+	if ( 'undefined' !== typeof gform.addAction ) {
+		// After field settings are loaded in the form editor when a field is selected.
+		// Also an equivalent jQuery event hook 'gform_load_field_settings'.
+		gform.addAction( 'gform_post_load_field_settings', function( field, form ) {
+			loadPdfViewerFieldEditorSettings( field[0] );
+		}, 10, 2 );
+	}
 
 	const { __ } = wp.i18n;
 
