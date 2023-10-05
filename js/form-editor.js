@@ -135,6 +135,10 @@
 	// Choose PDF button click handler in form editor
 	function handleChooseClick (e) {
 		e.preventDefault();
+		if ( 'undefined' === typeof wp.media ) {
+			console.log( '[Embed PDF for Gravity Forms] wp.media is undefined.' );
+			return;
+		}
 		var file_frame = wp.media.frames.file_frame = wp.media({
 			title: __( 'Choose PDF', 'embed-pdf-gravityforms' ),
 			button: {
