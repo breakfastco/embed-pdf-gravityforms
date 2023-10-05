@@ -25,18 +25,20 @@ if ( ! defined( 'EMBED_PDF_GRAVITYFORMS_VERSION' ) ) {
 	define( 'EMBED_PDF_GRAVITYFORMS_VERSION', '1.0.5' );
 }
 
-add_action( 'gform_loaded', 'embed_pdf_gravityforms_init', 5 );
-/**
- * Loads the plugin files and features.
- *
- * @return void
- */
-function embed_pdf_gravityforms_init() {
-	if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
-		return;
-	}
+if ( ! function_exists( 'embed_pdf_gravityforms_init' ) ) {
+	add_action( 'gform_loaded', 'embed_pdf_gravityforms_init', 5 );
+	/**
+	 * Loads the plugin files and features.
+	 *
+	 * @return void
+	 */
+	function embed_pdf_gravityforms_init() {
+		if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
+			return;
+		}
 
-	// Add-on init.
-	require_once dirname( EMBED_PDF_GRAVITYFORMS_PATH ) . '/includes/class-gf-addon-pdf-viewer.php';
-	GFAddOn::register( 'GF_Addon_PDF_Viewer' );
+		// Add-on init.
+		require_once dirname( EMBED_PDF_GRAVITYFORMS_PATH ) . '/includes/class-gf-addon-pdf-viewer.php';
+		GFAddOn::register( 'GF_Addon_PDF_Viewer' );
+	}
 }
