@@ -79,13 +79,21 @@
 						return;
 					// Is it a local URL?
 					} else if ( epdf_gf_form_editor_strings.site_url !== this.value.substring( 0, epdf_gf_form_editor_strings.site_url.length ) ) {
+						// No.
+						var msg = __( 'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer.', 'embed-pdf-gravityforms' )
+							+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">' + __( 'Learn about CORS →', 'embed-pdf-gravityforms' ) + '</a>';
+
+						// Can the user upload files into the Media Library?
+						if ( '1' === epdf_gf_form_editor_strings.can_upload_files ) {
+							msg += '<p><button id="download_pdf_media" class="gform-button gform-button--white">' + __( 'Download PDF into Media Library', 'embed-pdf-gravityforms' ) + '</button></p>';
+						}
 						setFieldError(
 							'pdf_url_setting',
 							'below',
-							__( 'Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer.', 'embed-pdf-gravityforms' )
-								+ '<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">' + __( 'Learn about CORS →', 'embed-pdf-gravityforms' ) + '</a>'
-								//+ '<p><button class="gform-button gform-button--white">Download PDF into Media Library</button></p>'
+							msg
 						);
+						// Add handler to Download PDF button.
+						document.querySelector( '#download_pdf_media' ).addEventListener( 'click', handleDownloadClick );
 						return;
 					} else {
 						resetFieldError( 'pdf_url_setting' );
@@ -167,6 +175,54 @@
 		file_frame.open();
 
 		// Don't submit forms.
+		return false;
+	}
+
+	function handleDownloadClick (e) {
+		e.preventDefault();
+		var url = document.getElementById('field_pdf_url').value;
+		// Is the URL valid?
+		if ( ! isValidHttpUrl( url ) ) {
+			setFieldError(
+				'pdf_url_setting',
+				'below',
+				__( 'Please enter a valid URL.', 'embed-pdf-gravityforms' )
+			);
+			return;
+		}
+
+		// Make an AJAX call to obtain the file.
+		fetch( epdf_gf_form_editor_strings.ajax_url, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: new URLSearchParams({
+				action: 'download_pdf_media',
+				_ajax_nonce: epdf_gf_form_editor_strings.nonce,
+				url: url,
+			}).toString()
+		})
+		.then((response) => response.json())
+		.then((responseObj) => {
+			if ( responseObj ) {
+				if ( responseObj.data.url && isValidHttpUrl( responseObj.data.url ?? '' ) ) {
+					// Set the value twice unless we fire an input event.
+					document.getElementById('field_pdf_url').value = responseObj.data.url;
+					SetFieldProperty( 'pdfUrl', responseObj.data.url );
+					// Clear the error.
+					resetFieldError( 'pdf_url_setting' );
+				} else if ( ! responseObj.success && responseObj.data.msg ) {
+					setFieldError(
+						'pdf_url_setting',
+						'below',
+						responseObj.data.msg
+					);
+					return;
+				}
+			}
+		})
+		.catch((error) => {
+			console.error(error);
+		});
 		return false;
 	}
 }( window.epdfGf = window.epdfGf || {} ));

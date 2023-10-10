@@ -135,6 +135,9 @@ if ( class_exists( 'GFAddOn' ) ) {
 			 * library modal is not available unless wp_enqueue_media() is run.
 			 */
 			add_action( 'admin_enqueue_scripts', 'wp_enqueue_media' );
+
+			// AJAX handler for the Download PDF into Media Library button.
+			add_action( 'wp_ajax_download_pdf_media', array( $this, 'ajax_handler_download_pdf_media' ) );
 		}
 
 		/**
@@ -169,6 +172,59 @@ if ( class_exists( 'GFAddOn' ) ) {
 				<small><?php esc_html_e( 'Loading too small to read? Increase this value to zoom in.', 'embed-pdf-gravityforms' ); ?></small>
 			</div>
 			</li><?php
+		}
+
+		/**
+		 * AJAX handler for the Download PDF into Media Library button.
+		 *
+		 * @return void
+		 */
+		public function ajax_handler_download_pdf_media() {
+			check_ajax_referer( 'epdf_gf_download_pdf_media' );
+
+			if ( empty( $_POST['url'] ) ) {
+				wp_send_json_error();
+			}
+
+			$url = sanitize_url( wp_unslash( $_POST['url'] ) );
+
+			// Download the file.
+			$tmp_file = download_url( $url );
+			if ( is_wp_error( $tmp_file ) ) {
+				wp_send_json_error(
+					array(
+						/* translators: 1. An error message. */
+						'msg' => sprintf( __( 'The download failed with error "%s"' ), $tmp_file->get_error_message() ),
+					)
+				);
+			}
+			// Move from a temp file to the uploads directory.
+			$upload_dir = wp_upload_dir();
+			$file_name  = wp_unique_filename( $upload_dir['path'], basename( $url ) );
+			$path       = $upload_dir['path'] . DIRECTORY_SEPARATOR . $file_name;
+			global $wp_filesystem;
+			if ( ! class_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . '/wp-admin/includes/file.php';
+			}
+			WP_Filesystem();
+			$wp_filesystem->move( $tmp_file, $path );
+			// Add to the database.
+			$media_id = wp_insert_attachment(
+				array(
+					'post_author'    => wp_get_current_user()->ID,
+					'post_title'     => $file_name,
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				),
+				$path
+			);
+			wp_update_attachment_metadata( $media_id, wp_generate_attachment_metadata( $media_id, $path ) );
+			wp_send_json_success(
+				array(
+					'url' => wp_get_attachment_url( $media_id ),
+				)
+			);
 		}
 
 		/**
@@ -216,8 +272,11 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'version' => $this->_version,
 					'deps'    => array( 'jquery' ),
 					'strings' => array(
-						'field_type' => self::FIELD_TYPE,
-						'site_url'   => site_url(),
+						'field_type'       => self::FIELD_TYPE,
+						'site_url'         => site_url(),
+						'can_upload_files' => current_user_can( 'upload_files' ),
+						'ajax_url'         => admin_url( 'admin-ajax.php' ),
+						'nonce'            => wp_create_nonce( 'epdf_gf_download_pdf_media' ),
 					),
 					'enqueue' => array(
 						array(
