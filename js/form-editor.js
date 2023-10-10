@@ -144,7 +144,7 @@
 	function handleChooseClick (e) {
 		e.preventDefault();
 		if ( 'undefined' === typeof wp.media ) {
-			console.log( '[Embed PDF for Gravity Forms] wp.media is undefined.' );
+			console.error( '[Embed PDF for Gravity Forms] wp.media is undefined.' );
 			return;
 		}
 		var file_frame = wp.media.frames.file_frame = wp.media({
@@ -221,7 +221,8 @@
 			}
 		})
 		.catch((error) => {
-			console.error(error);
+			console.error( '[Embed PDF for Gravity Forms] Download failed.' );
+			console.error( error );
 		});
 		return false;
 	}

@@ -37,7 +37,7 @@
 		if ( 'undefined' === typeof epdfInstance ) {
 			// Something is wrong, spin up data for this this preview is missing.
 			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
-				console.log( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, spin up data missing' );
+				console.error( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, spin up data missing' );
 			}
 			return;
 		}
@@ -46,7 +46,7 @@
 		if ( null === urlEl || '' === urlEl.value ) {
 			// The URL input is missing, or there is no PDF to load.
 			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
-				console.log( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, no PDF URL' );
+				console.error( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, no PDF URL' );
 			}
 			return;
 		}
@@ -85,8 +85,8 @@
 			togglePrevNextButtons(epdfInstance);
 		}).catch(function(error){
 			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
-				console.log( '[Embed PDF for Gravity Forms]' );
-				console.log( error );
+				console.error( '[Embed PDF for Gravity Forms] Preview failed.' );
+				console.error( error );
 			}
 			// Display an error on the front-end.
 			const el = document.querySelector('#' + fieldElementId + ' .ginput_container_pdf_viewer');
