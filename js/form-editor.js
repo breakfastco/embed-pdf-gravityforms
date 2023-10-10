@@ -142,6 +142,14 @@
 
 	// Choose PDF button click handler in form editor
 	function handleChooseClick (e) {
+		if ( '1' !== epdf_gf_form_editor_strings.can_upload_files ) {
+			setFieldError(
+				'pdf_url_setting',
+				'below',
+				__( 'Sorry, you do not have access to the Media Library.', 'embed-pdf-gravityforms' )
+			);
+			return;
+		}
 		e.preventDefault();
 		if ( 'undefined' === typeof wp.media ) {
 			console.error( '[Embed PDF for Gravity Forms] wp.media is undefined.' );

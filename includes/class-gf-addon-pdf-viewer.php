@@ -134,7 +134,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 			 * to use the Choose PDF button in the form editor. The media
 			 * library modal is not available unless wp_enqueue_media() is run.
 			 */
-			add_action( 'admin_enqueue_scripts', 'wp_enqueue_media' );
+			add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue_media' ) );
 
 			// AJAX handler for the Download PDF into Media Library button.
 			add_action( 'wp_ajax_download_pdf_media', array( $this, 'ajax_handler_download_pdf_media' ) );
@@ -229,6 +229,18 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'url' => wp_get_attachment_url( $media_id ),
 				)
 			);
+		}
+
+		/**
+		 * Makes sure wp_enqueue_media()
+		 *
+		 * @return void
+		 */
+		public function maybe_enqueue_media() {
+			if ( ! current_user_can( 'upload_files' ) ) {
+				return;
+			}
+			wp_enqueue_media();
 		}
 
 		/**
