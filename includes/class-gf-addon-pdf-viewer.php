@@ -129,7 +129,9 @@ if ( class_exists( 'GFAddOn' ) ) {
 			add_action( 'gform_field_standard_settings', array( $this, 'add_field_settings' ), 10, 2 );
 
 			/**
-			 * A user reported an error using the Choose PDF button. The media
+			 * Users with custom capabilities, like a Subscriber with all
+			 * Gravity Forms capabilities but not upload_files, will not be able
+			 * to use the Choose PDF button in the form editor. The media
 			 * library modal is not available unless wp_enqueue_media() is run.
 			 */
 			add_action( 'admin_enqueue_scripts', 'wp_enqueue_media' );
