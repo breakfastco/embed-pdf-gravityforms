@@ -194,7 +194,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 				wp_send_json_error(
 					array(
 						/* translators: 1. An error message. */
-						'msg' => sprintf( __( 'The download failed with error "%s"' ), $tmp_file->get_error_message() ),
+						'msg' => sprintf( __( 'The download failed with error "%s"', 'embed-pdf-gravityforms' ), $tmp_file->get_error_message() ),
 					)
 				);
 			}
@@ -216,6 +216,10 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'post_status'    => 'publish',
 					'comment_status' => 'closed',
 					'ping_status'    => 'closed',
+					'meta_input'     => array(
+						/* translators: 1. An external URL. */
+						'_source' => sprintf( __( 'Downloaded from %s by Embed PDF for Gravity Forms', 'embed-pdf-gravityforms' ), $url ),
+					),
 				),
 				$path
 			);
