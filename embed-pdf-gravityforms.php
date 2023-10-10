@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Description: Add-on for Gravity Forms. Provides a PDF Viewer field.
  * Author: Breakfast Co.
  * Author URI: https://breakfastco.xyz
- * Version: 1.0.5
+ * Version: 1.1.0
  * License: GPLv3
  * Text Domain: 'embed-pdf-gravityforms'
  */
@@ -22,7 +22,7 @@ if ( ! defined( 'EMBED_PDF_GRAVITYFORMS_PATH' ) ) {
 	define( 'EMBED_PDF_GRAVITYFORMS_PATH', __FILE__ );
 }
 if ( ! defined( 'EMBED_PDF_GRAVITYFORMS_VERSION' ) ) {
-	define( 'EMBED_PDF_GRAVITYFORMS_VERSION', '1.0.5' );
+	define( 'EMBED_PDF_GRAVITYFORMS_VERSION', '1.1.0' );
 }
 
 if ( ! function_exists( 'embed_pdf_gravityforms_init' ) ) {

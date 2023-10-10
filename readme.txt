@@ -5,7 +5,7 @@ Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
 Tested up to: 6.3.1
 Requires PHP: 5.6
-Stable tag: 1.0.5
+Stable tag: 1.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
@@ -55,6 +55,11 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 == Changelog ==
 
+= 1.1.0 =
+* [Added] Adds a Download PDF into Media Library button to the CORS error messages for users that have the upload_files capability.
+* [Fixed] Fixes the Choose PDF button not working for users without access to the Media Library by telling users why it does not work. The upload_files capability is required to use the Media Library dashboard features like the modal this button opens.
+* [Fixed] Avoid errors when two copies of this plugin are activated at the same time.
+
 = 1.0.5 =
 * [Fixed] Adds a "file not found" error to the form editor so users know that PDF files are missing without previewing the form
 * [Fixed] Changes CSS so the previous, next, zoom in, and zoom out buttons look better on smaller screens
@@ -82,6 +87,9 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Adds a Download PDF into Media Library button to the CORS error messages for users that have the upload_files capability. Fixes the Choose PDF button not working for users without access to the Media Library by telling users why it does not work. The upload_files capability is required to use the Media Library dashboard features like the modal this button opens. Avoid errors when two copies of this plugin are activated at the same time.
 
 = 1.0.5 =
 Adds a "file not found" error to the form editor so users know that PDF files are missing without previewing the form. Changes CSS so the previous, next, zoom in, and zoom out buttons look better on smaller screens. Fixes the Choose PDF button not working because the media library script enqueues have not run.
