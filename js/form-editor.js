@@ -117,8 +117,8 @@
 		// Launch an upload media modal when the Choose PDF button is clicked.
 		elements.push(document.getElementById('choose_pdf_url'));
 		if ( elements[2] ) {
-			elements[2].removeEventListener( 'click', handleChooseClick );
-			elements[2].addEventListener( 'click', handleChooseClick );
+			elements[2].removeEventListener( 'click', epdfGf['handleChooseClick'] );
+			elements[2].addEventListener( 'click', epdfGf['handleChooseClick'] );
 		}
 	}
 
@@ -140,52 +140,6 @@
 		))
 		.catch( exception => false );
 		return response;
-	}
-
-	// Choose PDF button click handler in form editor
-	function handleChooseClick (e) {
-		if ( '1' !== epdf_gf_form_editor_strings.can_upload_files ) {
-			setFieldError(
-				'pdf_url_setting',
-				'below',
-				__( 'Sorry, you do not have access to the Media Library.', 'embed-pdf-gravityforms' )
-			);
-			return;
-		}
-		e.preventDefault();
-		if ( 'undefined' === typeof wp.media ) {
-			console.error( '[Embed PDF for Gravity Forms] wp.media is undefined.' );
-			return;
-		}
-		var file_frame = wp.media.frames.file_frame = wp.media({
-			title: __( 'Choose PDF', 'embed-pdf-gravityforms' ),
-			button: {
-				text: __( 'Load', 'embed-pdf-gravityforms' )
-			},
-			frame: 'select',
-			multiple: false
-		});
-
-		// When an image is selected, run a callback.
-		file_frame.on('select', function () {
-			// Get one image from the uploader.
-			var attachment = file_frame.state().get('selection').first().toJSON();
-			var urlEl = document.getElementById('field_pdf_url');
-			if ( ! urlEl ) {
-				urlEl = document.getElementById('url_pdf'); // Feed settings input.
-			}
-			if ( urlEl && attachment.url ) {
-				urlEl.value = attachment.url;
-				// Fire the input event so our listener runs.
-				urlEl.dispatchEvent(new Event('input'));
-			}
-		});
-
-		// Finally, open the modal
-		file_frame.open();
-
-		// Don't submit forms.
-		return false;
 	}
 
 	function handleDownloadClick (e) {
@@ -234,6 +188,61 @@
 			console.error( '[Embed PDF for Gravity Forms] Download failed.' );
 			console.error( error );
 		});
+		return false;
+	}
+
+	/**
+	 * Public Methods
+	 */
+
+	/**
+	 * Handler for the Choose PDF button.
+	 * 
+	 * @param {*} e 
+	 * @returns 
+	 */
+	epdfGf.handleChooseClick = function(e) {
+		if ( '1' !== epdf_gf_form_editor_strings.can_upload_files ) {
+			setFieldError(
+				'pdf_url_setting',
+				'below',
+				__( 'Sorry, you do not have access to the Media Library.', 'embed-pdf-gravityforms' )
+			);
+			return;
+		}
+		e.preventDefault();
+		if ( 'undefined' === typeof wp.media ) {
+			console.error( '[Embed PDF for Gravity Forms] wp.media is undefined.' );
+			return;
+		}
+		var file_frame = wp.media.frames.file_frame = wp.media({
+			title: __( 'Choose PDF', 'embed-pdf-gravityforms' ),
+			button: {
+				text: __( 'Load', 'embed-pdf-gravityforms' )
+			},
+			frame: 'select',
+			multiple: false
+		});
+
+		// When an image is selected, run a callback.
+		file_frame.on('select', function () {
+			// Get one image from the uploader.
+			var attachment = file_frame.state().get('selection').first().toJSON();
+			var urlEl = document.getElementById('field_pdf_url');
+			if ( ! urlEl ) {
+				urlEl = document.getElementById('url_pdf'); // Feed settings input.
+			}
+			if ( urlEl && attachment.url ) {
+				urlEl.value = attachment.url;
+				// Fire the input event so our listener runs.
+				urlEl.dispatchEvent(new Event('input'));
+			}
+		});
+
+		// Finally, open the modal
+		file_frame.open();
+
+		// Don't submit forms.
 		return false;
 	}
 }( window.epdfGf = window.epdfGf || {} ));
