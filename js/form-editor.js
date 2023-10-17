@@ -92,8 +92,10 @@
 							'below',
 							msg
 						);
-						// Add handler to Download PDF button.
-						document.querySelector( '#download_pdf_media' ).addEventListener( 'click', handleDownloadClick );
+						if ( '1' === epdf_gf_form_editor_strings.can_upload_files ) {
+							// Add handler to Download PDF button.
+							document.querySelector( '#download_pdf_media' ).addEventListener( 'click', handleDownloadClick );
+						}
 						return;
 					} else {
 						resetFieldError( 'pdf_url_setting' );

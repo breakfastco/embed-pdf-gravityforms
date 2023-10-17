@@ -1,22 +1,19 @@
 <?php
 /**
- * Embed PDF for Gravity Forms
- *
- * @package embed-pdf-gravityforms
- */
-
-defined( 'ABSPATH' ) || exit;
-
-/**
  * Plugin Name: Embed PDF for Gravity Forms
  * Plugin URI: https://breakfastco.xyz/embed-pdf-gravityforms/
  * Description: Add-on for Gravity Forms. Provides a PDF Viewer field.
- * Author: Breakfast Co.
+ * Author: Breakfast
  * Author URI: https://breakfastco.xyz
  * Version: 1.1.0
  * License: GPLv3
  * Text Domain: 'embed-pdf-gravityforms'
+ *
+ * @author Corey Salzano <corey@breakfastco.xyz>
+ * @package embed-pdf-gravityforms
  */
+
+defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'EMBED_PDF_GRAVITYFORMS_PATH' ) ) {
 	define( 'EMBED_PDF_GRAVITYFORMS_PATH', __FILE__ );
