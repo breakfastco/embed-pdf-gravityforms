@@ -9,7 +9,7 @@
  * License: GPLv3
  * Text Domain: 'embed-pdf-gravityforms'
  *
- * @author Corey Salzano <corey@breakfastco.xyz>
+ * @author Corey Salzano <csalzano@duck.com>
  * @package embed-pdf-gravityforms
  */
 
