@@ -14,7 +14,7 @@
 	// Spin up script. Initializes all the viewers.
 	window.addEventListener( 'epdf_gf_pdfjs_worker_set', function(e) {
 		document.querySelectorAll( '.epdf-container canvas.epdf' ).forEach( function( el ) {
-			loadPreview( el.dataset.field, el.dataset.form );
+			epdfGf.loadPreview( el.dataset.field, el.dataset.form );
 		});
 	});
 
@@ -29,79 +29,6 @@
 
 	function canvasElement( fieldId, formId ) {
 		return document.querySelector( '.epdf-container canvas.epdf#field_' + formId + '_' + fieldId + '_embed_pdf_gravityforms' );
-	}
-
-	function loadPreview( fieldId, formId ) {
-		var epdfInstance = canvasElement( fieldId, formId );
-		var fieldElementId = 'field_' + formId + '_' + fieldId;
-		if ( 'undefined' === typeof epdfInstance ) {
-			// Something is wrong, spin up data for this this preview is missing.
-			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
-				console.error( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, spin up data missing' );
-			}
-			return;
-		}
-
-		var urlEl = document.getElementById( 'input_' + formId + '_' + fieldId );
-		if ( null === urlEl || '' === urlEl.value ) {
-			// The URL input is missing, or there is no PDF to load.
-			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
-				console.error( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, no PDF URL' );
-			}
-			return;
-		}
-
-		const controls = {
-			'prev': 'onPrevPage',
-			'next': 'onNextPage',
-			'zoom_in': 'onZoomIn',
-			'zoom_out': 'onZoomOut'
-		};
-		Object.keys(controls).forEach(function(key, index){
-			var el = document.getElementById( epdfInstance.id + '_' + key);
-			if ( el ) {
-				el.addEventListener('click', epdfGf[controls[key]]);
-			}
-		});
-
-		/**
-		 * Asynchronously downloads PDF.
-		 */
-		pdfjsLib.getDocument({ url: urlEl.value, verbosity: 0 }).promise.then(function(pdfDoc_) {
-			if ( pdfDocs[fieldId]) {
-				pdfDocs[fieldId].destroy();
-			}
-			pdfDocs[fieldId] = pdfDoc_;
-			document.getElementById( epdfInstance.id + '_page_count').textContent = pdfDocs[fieldId].numPages;
-			pdfDocs[fieldId].currentScaleValue = epdfInstance.dataset.initialScale;
-
-			// Blow up the canvas to 100% width before rendering
-			epdfInstance.style.width = '100%';
-
-			// Initial/first page rendering
-			renderPage(epdfInstance, Number(epdfInstance.dataset.pageNum));
-
-			// Disable the Previous or Next buttons depending on page count.
-			togglePrevNextButtons(epdfInstance);
-		}).catch(function(error){
-			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
-				console.error( '[Embed PDF for Gravity Forms] Preview failed.' );
-				console.error( error );
-			}
-			// Display an error on the front-end.
-			const el = document.querySelector('#' + fieldElementId + ' .ginput_container_pdf_viewer');
-			if ( el && error.message ) {
-				const { __ } = wp.i18n;
-				var msg = '<p><b>' + __( 'PDF Viewer Error:', 'embed-pdf-gravityforms' ) + '</b> ' + error.message;
-				if ( epdf_gf_pdfjs_strings.is_user_logged_in ) {
-					msg += ' <a href="https://breakfastco.xyz/embed-pdf-for-gravity-forms/#troubleshooting">' + __( 'Troubleshooting →', 'embed-pdf-gravityforms' ) + '</a>';
-				}
-				msg += '</p>';
-				el.innerHTML += msg;
-			}
-			// Hide the broken controls.
-			const controlEls = document.querySelectorAll( '#' + fieldElementId + ' .epdf-controls-container, #' + fieldElementId + ' .epdf-container' ).forEach( function( el ) { el.style.display ='none'; });
-		});
 	}
 
 	/**
@@ -181,6 +108,86 @@
 	/**
 	 * Public Methods
 	 */
+
+	/**
+	 * Initializes a viewer canvas with the field's document and scale setting.
+	 * 
+	 * @param {string} fieldId
+	 * @param {string} formId
+	 * @returns void
+	 */
+	epdfGf.loadPreview = function( fieldId, formId ) {
+		var epdfInstance = canvasElement( fieldId, formId );
+		var fieldElementId = 'field_' + formId + '_' + fieldId;
+		if ( 'undefined' === typeof epdfInstance ) {
+			// Something is wrong, spin up data for this this preview is missing.
+			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
+				console.error( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, spin up data missing' );
+			}
+			return;
+		}
+
+		var urlEl = document.getElementById( 'input_' + formId + '_' + fieldId );
+		if ( null === urlEl || '' === urlEl.value ) {
+			// The URL input is missing, or there is no PDF to load.
+			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
+				console.error( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, no PDF URL' );
+			}
+			return;
+		}
+
+		const controls = {
+			'prev': 'onPrevPage',
+			'next': 'onNextPage',
+			'zoom_in': 'onZoomIn',
+			'zoom_out': 'onZoomOut'
+		};
+		Object.keys(controls).forEach(function(key, index){
+			var el = document.getElementById( epdfInstance.id + '_' + key);
+			if ( el ) {
+				el.addEventListener('click', epdfGf[controls[key]]);
+			}
+		});
+
+		/**
+		 * Asynchronously downloads PDF.
+		 */
+		pdfjsLib.getDocument({ url: urlEl.value, verbosity: 0 }).promise.then(function(pdfDoc_) {
+			if ( pdfDocs[fieldId]) {
+				pdfDocs[fieldId].destroy();
+			}
+			pdfDocs[fieldId] = pdfDoc_;
+			document.getElementById( epdfInstance.id + '_page_count').textContent = pdfDocs[fieldId].numPages;
+			pdfDocs[fieldId].currentScaleValue = epdfInstance.dataset.initialScale;
+
+			// Blow up the canvas to 100% width before rendering
+			epdfInstance.style.width = '100%';
+
+			// Initial/first page rendering
+			renderPage(epdfInstance, Number(epdfInstance.dataset.pageNum));
+
+			// Disable the Previous or Next buttons depending on page count.
+			togglePrevNextButtons(epdfInstance);
+		}).catch(function(error){
+			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
+				console.error( '[Embed PDF for Gravity Forms] Preview failed.' );
+				console.error( error );
+			}
+			// Display an error on the front-end.
+			const el = document.querySelector('#' + fieldElementId + ' .ginput_container_pdf_viewer');
+			if ( el && error.message ) {
+				const { __ } = wp.i18n;
+				var msg = '<p><b>' + __( 'PDF Viewer Error:', 'embed-pdf-gravityforms' ) + '</b> ' + error.message;
+				if ( epdf_gf_pdfjs_strings.is_user_logged_in ) {
+					msg += ' <a href="https://breakfastco.xyz/embed-pdf-gravityforms/#troubleshooting">' + __( 'Troubleshooting →', 'embed-pdf-gravityforms' ) + '</a>';
+				}
+				msg += '</p>';
+				el.innerHTML += msg;
+			}
+			// Hide the broken controls.
+			const controlEls = document.querySelectorAll( '#' + fieldElementId + ' .epdf-controls-container, #' + fieldElementId + ' .epdf-container' ).forEach( function( el ) { el.style.display ='none'; });
+		});
+	}
 
 	/**
 	 * Handler for the Previous Page button.
