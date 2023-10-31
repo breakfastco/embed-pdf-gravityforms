@@ -14,7 +14,7 @@ An add-on for Gravity Forms. Provides a PDF Viewer field.
 
 == Description ==
  
-Embed PDF for Gravity Forms provides a PDF Viewer field type. Include PDF files in forms without requiring users to download the PDF. Supports multi-page documents. Provides zoom controls.
+Embed PDF for Gravity Forms provides a PDF Viewer field type. Include PDF files in forms without requiring users to download the PDFs. Supports multi-page documents for PDF flipbooks in Gravity Forms. Provides zoom controls.
 
 = Features = 
 
@@ -26,7 +26,7 @@ Embed PDF for Gravity Forms provides a PDF Viewer field type. Include PDF files 
 
 = Demo =
 
-[https://breakfastco.xyz/embed-pdf-for-gravity-forms/](https://breakfastco.xyz/embed-pdf-for-gravity-forms/)
+[https://breakfastco.xyz/embed-pdf-gravityforms/](https://breakfastco.xyz/embed-pdf-gravityforms/)
 
 Have an idea for a new feature? Please create an Issue on Github or Support Topic on wordpress.org.
 
