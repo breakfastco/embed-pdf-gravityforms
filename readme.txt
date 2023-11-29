@@ -20,9 +20,9 @@ Embed PDF for Gravity Forms provides a PDF Viewer field type. Include PDF files 
 
 * Drag a PDF Viewer field onto any Gravity Form
 * Choose PDF from Media Library or provide local URL
+* Set default zoom level
 * Supports multi-page PDFs
 * Supports Dynamic Population
-* Initial Scale setting changes default zoom level
 
 = Demo =
 
