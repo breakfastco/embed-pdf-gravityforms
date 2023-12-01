@@ -79,7 +79,12 @@
 				epdfInstance.style.width = epdfInstance.width + 'px';
 
 				// Dispatch an event after a page render.
-				const event = new CustomEvent( 'epdf_gf_render_page', { detail: epdfInstance.dataset.pageNum });
+				const event = new CustomEvent( 'epdf_gf_render_page', {
+					detail: {
+						page: epdfInstance.dataset.pageNum,
+						scale: pdfDocs[epdfInstance.dataset.field].currentScaleValue,
+					},
+				});
 				window.dispatchEvent(event);
 			});
 		});
