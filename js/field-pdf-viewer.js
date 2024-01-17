@@ -111,8 +111,47 @@
 	}
 
 	/**
+	 * Adds or removes the event listeners from the paging and zoom buttons.
+	 *
+	 * @param {string} canvasId The viewer canvas id.
+	 * @param {bool} active Whether the event listeners are added.
+	 * @returns void
+	 */
+	function toggleControlEventListeners( canvasId, active ) {
+		const controls = {
+			'prev': 'onPrevPage',
+			'next': 'onNextPage',
+			'zoom_in': 'onZoomIn',
+			'zoom_out': 'onZoomOut'
+		};
+		Object.keys(controls).forEach(function(key, index){
+			var el = document.getElementById( canvasId + '_' + key);
+			if ( el ) {
+				if ( active ) {
+					el.addEventListener('click', epdfGf[controls[key]]);
+				} else {
+					el.removeEventListener('click', epdfGf[controls[key]]);
+				}
+			}
+		});
+	}
+
+	/**
 	 * Public Methods
 	 */
+
+	epdfGf.unloadPreview = function( fieldId, formId ) {
+		var epdfInstance = canvasElement( fieldId, formId );
+		var vctx = epdfInstance.getContext('2d');
+		// Clear the canvas so we don't layer them.
+		vctx.clearRect(0, 0, epdfInstance.width, epdfInstance.height);
+		// Destroy the pdfDocs so it can't be rendered again.
+		if ( pdfDocs[fieldId]) {
+			pdfDocs[fieldId].destroy();
+		}
+		// Disable the paging and zoom controls.
+		toggleControlEventListeners( epdfInstance.id, false );
+	}
 
 	/**
 	 * Initializes a viewer canvas with the field's document and scale setting.
@@ -141,18 +180,8 @@
 			return;
 		}
 
-		const controls = {
-			'prev': 'onPrevPage',
-			'next': 'onNextPage',
-			'zoom_in': 'onZoomIn',
-			'zoom_out': 'onZoomOut'
-		};
-		Object.keys(controls).forEach(function(key, index){
-			var el = document.getElementById( epdfInstance.id + '_' + key);
-			if ( el ) {
-				el.addEventListener('click', epdfGf[controls[key]]);
-			}
-		});
+		// Enable the paging and zoom controls.
+		toggleControlEventListeners( epdfInstance.id, true );
 
 		/**
 		 * Asynchronously downloads PDF.
