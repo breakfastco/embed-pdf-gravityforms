@@ -5,7 +5,7 @@ Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
 Tested up to: 6.4.1
 Requires PHP: 5.6
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
@@ -55,6 +55,10 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 == Changelog ==
 
+= 1.1.2 =
+* [Fixed] Adds compatibility with language packs for translation.
+* [Changed] Changes the tested up to version to 6.4.2.
+
 = 1.1.1 =
 * [Fixed] Fixes a bug in the uninstaller that prevented the plugin from removing all database rows.
 * [Changed] Changes the tested up to version to 6.4.1.
@@ -88,6 +92,9 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+Adds compatibility with language packs for translation. Changes the tested up to version to 6.4.2.
 
 = 1.1.1 =
 Fixes a bug in the uninstaller that prevented the plugin from removing all database rows. Changes the tested up to version to 6.4.1.
