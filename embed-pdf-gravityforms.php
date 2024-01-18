@@ -39,3 +39,17 @@ if ( ! function_exists( 'embed_pdf_gravityforms_init' ) ) {
 		GFAddOn::register( 'GF_Addon_PDF_Viewer' );
 	}
 }
+
+if ( ! function_exists( 'embed_pdf_gravityforms_load_textdomain' ) ) {
+	// Add compatibility with language packs.
+	add_action( 'init', 'embed_pdf_gravityforms_load_textdomain' );
+
+	/**
+	 * Loads translated strings.
+	 *
+	 * @return void
+	 */
+	function embed_pdf_gravityforms_load_textdomain() {
+		load_plugin_textdomain( 'embed-pdf-gravityforms', false, dirname( EMBED_PDF_GRAVITYFORMS_PATH ) . '/languages' );
+	}
+}
