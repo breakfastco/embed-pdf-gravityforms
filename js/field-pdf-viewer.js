@@ -142,6 +142,9 @@
 
 	epdfGf.unloadPreview = function( fieldId, formId ) {
 		var epdfInstance = canvasElement( fieldId, formId );
+		if ( null == epdfInstance ) {
+			return;
+		}
 		var vctx = epdfInstance.getContext('2d');
 		// Clear the canvas so we don't layer them.
 		vctx.clearRect(0, 0, epdfInstance.width, epdfInstance.height);
@@ -163,7 +166,7 @@
 	epdfGf.loadPreview = function( fieldId, formId ) {
 		var epdfInstance = canvasElement( fieldId, formId );
 		var fieldElementId = 'field_' + formId + '_' + fieldId;
-		if ( 'undefined' === typeof epdfInstance ) {
+		if ( null == epdfInstance ) {
 			// Something is wrong, spin up data for this this preview is missing.
 			if ( epdf_gf_pdf_viewer_strings.script_debug ) {
 				console.error( '[Embed PDF for Gravity Forms] loadPreview( ' + fieldId + ' ) failed, spin up data missing' );
@@ -231,6 +234,9 @@
 	 */
 	epdfGf.onPrevPage = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
+		if ( null == epdfInstance ) {
+			return;
+		}
 		if (Number(epdfInstance.dataset.pageNum) <= 1) {
 			return;
 		}
@@ -247,6 +253,9 @@
 	 */
 	epdfGf.onNextPage = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
+		if ( null == epdfInstance ) {
+			return;
+		}
 		if (Number(epdfInstance.dataset.pageNum) >= pdfDocs[e.target.dataset.field].numPages) {
 			return;
 		}
@@ -263,6 +272,9 @@
 	 */
 	epdfGf.onZoomIn = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
+		if ( null == epdfInstance ) {
+			return;
+		}
 		let newScale = pdfDocs[e.target.dataset.field].currentScaleValue;
 		newScale = (newScale * scaleDeltaDefault()).toFixed(2);
 		newScale = Math.ceil(newScale * 10) / 10;
@@ -283,6 +295,9 @@
 	 */
 	epdfGf.onZoomOut = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
+		if ( null == epdfInstance ) {
+			return;
+		}
 		let newScale = pdfDocs[e.target.dataset.field].currentScaleValue;
 		newScale = (newScale / scaleDeltaDefault()).toFixed(2);
 		newScale = Math.floor(newScale * 10) / 10;
