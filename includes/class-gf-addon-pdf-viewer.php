@@ -286,7 +286,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'handle'  => 'epdf_gf_form_editor',
 					'src'     => plugins_url( "js/form-editor{$min}.js", EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version' => $this->_version,
-					'deps'    => array( 'jquery' ),
+					'deps'    => array( 'jquery', 'wp-i18n' ),
 					'strings' => array(
 						'field_type'       => self::FIELD_TYPE,
 						'site_url'         => site_url(),
@@ -296,7 +296,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 					),
 					'enqueue' => array(
 						array(
-							'admin' => 'form_editor',
+							'admin_page' => 'form_editor',
 						),
 					),
 				),
