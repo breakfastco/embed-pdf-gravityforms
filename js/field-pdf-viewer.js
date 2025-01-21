@@ -230,7 +230,7 @@
 	 * Handler for the Previous Page button.
 	 * 
 	 * @param {*} e 
-	 * @returns 
+	 * @returns void
 	 */
 	epdfGf.onPrevPage = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
@@ -249,7 +249,7 @@
 	 * Handler for the Next Page button.
 	 * 
 	 * @param {*} e 
-	 * @returns 
+	 * @returns void
 	 */
 	epdfGf.onNextPage = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
@@ -268,7 +268,7 @@
 	 * Handler for the Zoom In button.
 	 * 
 	 * @param {*} e 
-	 * @returns 
+	 * @returns void
 	 */
 	epdfGf.onZoomIn = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
@@ -291,7 +291,7 @@
 	 * Handler for the Zoom Out button.
 	 * 
 	 * @param {*} e 
-	 * @returns 
+	 * @returns void
 	 */
 	epdfGf.onZoomOut = function(e) {
 		var epdfInstance = canvasElement( e.target.dataset.field, e.target.dataset.form );
