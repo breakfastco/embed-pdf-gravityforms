@@ -3,9 +3,9 @@
 Contributors: salzano
 Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
-Tested up to: 6.4.3
+Tested up to: 6.7.1
 Requires PHP: 5.6
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
@@ -55,6 +55,10 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 == Changelog ==
 
+= 1.1.4 =
+* [Added] Includes all translation files in a folder /languages.
+* [Changed] Bumps tested up to version to 6.7.1.
+
 = 1.1.3 =
 * [Fixed] Always returns viewer controls when the field inputs are requested despite having no PDF URL to display. Add-ons to this plugin may populate PDFs into viewers after the page loads.
 * [Fixed] Enqueues the form editor JavaScript only in the form editor.
@@ -97,6 +101,9 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 
 == Upgrade Notice ==
+
+= 1.1.4 =
+Includes all translation files in a folder /languages. Bumps tested up to version to 6.7.1.
 
 = 1.1.3 =
 Always returns viewer controls when the field inputs are requested despite having no PDF URL to display. Add-ons to this plugin may populate PDFs into viewers after the page loads. Enqueues the form editor JavaScript only in the form editor. Changes the tested up to version to 6.4.3.
