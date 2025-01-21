@@ -1,0 +1,133 @@
+# Translation of Plugins - Embed PDF for Gravity Forms - Stable (latest release) in Spanish (Colombia)
+# This file is distributed under the same license as the Plugins - Embed PDF for Gravity Forms - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-05-31 23:42:18+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/4.0.1\n"
+"Language: es_CO\n"
+"Project-Id-Version: Plugins - Embed PDF for Gravity Forms - Stable (latest release)\n"
+
+#: js/form-editor.js:221
+msgid "Load"
+msgstr "Cargar"
+
+#: js/form-editor.js:209
+msgid "Sorry, you do not have access to the Media Library."
+msgstr "Lo sentimos, no tiene acceso a la Biblioteca Multimedia."
+
+#: js/form-editor.js:109
+msgid "No file exists at the provided URL."
+msgstr "No existe ningún archivo en la URL proporcionada."
+
+#: js/form-editor.js:88
+msgid "Download PDF into Media Library"
+msgstr "Descargar un PDF en la Biblioteca Multimedia"
+
+#: js/form-editor.js:84
+msgid "Learn about CORS →"
+msgstr "Aprende más sobre CORS →"
+
+#: js/form-editor.js:83
+msgid "Only PDFs hosted by this website and other websites listing this website in a CORS header ‘Access-Control-Allow-Origin’ can load in the viewer."
+msgstr "Sólo los PDF alojados en este sitio web y otros sitios web que incluyan este sitio web en un header CORS 'Access-Control-Allow-Origin' pueden cargarse."
+
+#: js/form-editor.js:77 js/form-editor.js:153
+msgid "Please enter a valid URL."
+msgstr "Por favor introduce una URL válida."
+
+#: js/field-pdf-viewer.js:219
+msgid "Troubleshooting →"
+msgstr "Reportar un problema →"
+
+#: js/field-pdf-viewer.js:217
+msgid "PDF Viewer Error:"
+msgstr "Error de Visor PDF:"
+
+#: includes/class-gf-field-pdf-viewer.php:181
+msgid "This is a content placeholder. PDFs are not displayed in the form admin. Preview this form to view the content."
+msgstr "Este es un marcador de contenido. Los PDF no se muestran en el administrador del formulario. Previsualice este formulario para ver el contenido."
+
+#: includes/class-gf-field-pdf-viewer.php:157
+msgid "Zoom In"
+msgstr "Ampliar"
+
+#: includes/class-gf-field-pdf-viewer.php:156
+msgid "Zoom Out"
+msgstr "Reducir"
+
+#: includes/class-gf-field-pdf-viewer.php:155
+msgid "Page:"
+msgstr "Página:"
+
+#: includes/class-gf-field-pdf-viewer.php:154
+msgid "Next"
+msgstr "Siguiente"
+
+#: includes/class-gf-field-pdf-viewer.php:153
+msgid "Previous"
+msgstr "Anterior"
+
+#. translators: 1. Gravity Forms field ID. 2. Gravity Forms form ID.
+#: includes/class-gf-field-pdf-viewer.php:130
+msgid "No PDF to load into field %1$s on form %2$s"
+msgstr "Ningún PDF para cargar en el campo %1$s en el formulario %2$s"
+
+#: includes/class-gf-field-pdf-viewer.php:33
+#: includes/class-gf-field-pdf-viewer.php:180
+msgid "PDF Viewer"
+msgstr "Visor PDF"
+
+#. translators: 1. An external URL.
+#: includes/class-gf-addon-pdf-viewer.php:221
+msgid "Downloaded from %s by Embed PDF for Gravity Forms"
+msgstr "Descargado de %s por Integrador PDF para Gravity Forms"
+
+#. translators: 1. An error message.
+#: includes/class-gf-addon-pdf-viewer.php:197
+msgid "The download failed with error \"%s\""
+msgstr "La descarga falló con el error \"%s\""
+
+#: includes/class-gf-addon-pdf-viewer.php:172
+msgid "Loading too small to read? Increase this value to zoom in."
+msgstr "¿Demasiada pequeña para leerla? Aumente este valor para ampliar."
+
+#: includes/class-gf-addon-pdf-viewer.php:168
+msgid "Initial Scale"
+msgstr "Escala Inicial"
+
+#: includes/class-gf-addon-pdf-viewer.php:161 js/form-editor.js:219
+msgid "Choose PDF"
+msgstr "Seleccionar PDF"
+
+#: includes/class-gf-addon-pdf-viewer.php:159
+msgid "PDF"
+msgstr "PDF"
+
+#. Author URI of the plugin
+#: embed-pdf-gravityforms.php
+msgid "https://breakfastco.xyz"
+msgstr "https://breakfastco.xyz"
+
+#. Author of the plugin
+#: embed-pdf-gravityforms.php
+msgid "Breakfast"
+msgstr "Breakfast"
+
+#. Description of the plugin
+#: embed-pdf-gravityforms.php
+msgid "Add-on for Gravity Forms. Provides a PDF Viewer field."
+msgstr "Add-on para Gravity Forms. Proporciona un campo de Visor PDF."
+
+#. Plugin URI of the plugin
+#: embed-pdf-gravityforms.php
+msgid "https://breakfastco.xyz/embed-pdf-gravityforms/"
+msgstr "https://breakfastco.xyz/embed-pdf-gravityforms/"
+
+#. Plugin Name of the plugin
+#: embed-pdf-gravityforms.php includes/class-gf-field-pdf-viewer.php:68
+msgid "Embed PDF for Gravity Forms"
+msgstr "Integrador PDF para Gravity Forms"
