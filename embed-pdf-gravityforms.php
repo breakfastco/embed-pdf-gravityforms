@@ -8,6 +8,8 @@
  * Version: 1.1.3
  * License: GPLv3
  * Text Domain: embed-pdf-gravityforms
+ * GitHub Plugin URI: breakfastco/embed-pdf-gravityforms
+ * Primary Branch: main
  *
  * @author Corey Salzano <csalzano@duck.com>
  * @package embed-pdf-gravityforms
