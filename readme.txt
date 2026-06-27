@@ -3,9 +3,9 @@
 Contributors: salzano
 Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
-Tested up to: 6.7.1
+Tested up to: 7.0
 Requires PHP: 5.6
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
@@ -55,6 +55,10 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 == Changelog ==
 
+= 1.1.5 =
+* [Fixed] Ensure user can upload files before downloading a file from a link they provide in the form editor. Ensure the file user provided to download is of an allowed mime type.
+* [Changed] Bumps tested up to version to 7.0.
+
 = 1.1.4 =
 * [Added] Includes all translation files in a folder /languages.
 * [Changed] Bumps tested up to version to 6.7.1.
@@ -102,6 +106,9 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 == Upgrade Notice ==
 
+= 1.1.5 =
+Bumps tested up to version to 7.0. Ensure user can upload files before downloading a file from a link they provide in the form editor. Ensure the file user provided to download is of an allowed mime type.
+
 = 1.1.4 =
 Includes all translation files in a folder /languages. Bumps tested up to version to 6.7.1.
 
@@ -115,7 +122,7 @@ Adds compatibility with language packs for translation. Changes the tested up to
 Fixes a bug in the uninstaller that prevented the plugin from removing all database rows. Changes the tested up to version to 6.4.1.
 
 = 1.1.0 =
-Adds a Download PDF into Media Library button to the CORS error messages for users that have the upload_files capability. Fixes the Choose PDF button not working for users without access to the Media Library by telling users why it does not work. The upload_files capability is required to use the Media Library dashboard features like the modal this button opens. Avoid errors when two copies of this plugin are activated at the same time. Adds a "file not found" error to the form editor so users know that PDF files are missing without previewing the form. Changes CSS so the previous, next, zoom in, and zoom out buttons look better on smaller screens.
+Adds a Download PDF into Media Library button to the CORS error messages for users with upload_files capability. Fixes the Choose PDF button not working for users without access to the Media Library. Avoid errors when two copies of this plugin are activated. t previewing the form.
 
 = 1.0.0 =
 First version.
