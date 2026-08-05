@@ -138,6 +138,29 @@ if ( class_exists( 'GFAddOn' ) ) {
 
 			// AJAX handler for the Download PDF into Media Library button.
 			add_action( 'wp_ajax_download_pdf_media', array( $this, 'ajax_handler_download_pdf_media' ) );
+
+			// pdf.js ships as ESM; force type="module" on its script tag.
+			add_filter( 'script_loader_tag', array( $this, 'script_loader_tag_module' ), 10, 3 );
+		}
+
+		/**
+		 * Marks the pdf.js bootstrap script as an ES module.
+		 *
+		 * @param string $tag    The script tag.
+		 * @param string $handle The script handle.
+		 * @param string $src    The script source.
+		 * @return string
+		 */
+		public function script_loader_tag_module( $tag, $handle, $src ) {
+			if ( 'epdf_gf_pdfjs' !== $handle ) {
+				return $tag;
+			}
+
+			if ( false !== strpos( $tag, 'type=' ) ) {
+				return preg_replace( '/\stype=(["\'])[^"\']*\1/', ' type="module"', $tag, 1 );
+			}
+
+			return str_replace( '<script ', '<script type="module" ', $tag );
 		}
 
 		/**
@@ -270,7 +293,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 				array(
 					// Need this JavaScript file or we can't load PDFs.
 					'handle'    => 'epdf_gf_pdfjs',
-					'src'       => plugins_url( 'js/pdfjs/pdf.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No un-minimized version of this script included.
+					'src'       => plugins_url( 'js/pdfjs-bootstrap.js', EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version'   => $this->_version,
 					'deps'      => array(),
 					'in_footer' => true,
@@ -278,7 +301,11 @@ if ( class_exists( 'GFAddOn' ) ) {
 						array( 'field_types' => array( self::FIELD_TYPE ) ),
 					),
 					'strings'   => array(
-						'url_worker'        => plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH ), // No unminimized version of this script included.
+						'url_worker'        => add_query_arg(
+							'ver',
+							$this->_version,
+							plugins_url( 'js/pdfjs/pdf.worker.min.js', EMBED_PDF_GRAVITYFORMS_PATH )
+						),
 						'initial_scale'     => self::DEFAULT_SCALE_VALUE,
 						'is_user_logged_in' => is_user_logged_in(),
 					),
