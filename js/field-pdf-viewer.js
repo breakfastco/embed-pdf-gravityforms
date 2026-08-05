@@ -13,10 +13,21 @@
 
 	// Spin up script. Initializes all the viewers.
 	window.addEventListener( 'epdf_gf_pdfjs_worker_set', function(e) {
-		document.querySelectorAll( '.epdf-container canvas.epdf' ).forEach( function( el ) {
-			epdfGf.loadPreview( el.dataset.field, el.dataset.form );
-		});
+		initViewers();
 	});
+
+	/**
+	 * Gravity Forms AJAX replaces #gform_wrapper_* HTML on page changes.
+	 * Re-initialize any PDF viewers in the new markup.
+	 */
+	if ( typeof jQuery !== 'undefined' ) {
+		jQuery( document ).on( 'gform_page_loaded', function( event, formId ) {
+			if ( 'undefined' === typeof pdfjsLib ) {
+				return;
+			}
+			initViewers( formId );
+		});
+	}
 
 	/**
 	 * Private Members
@@ -26,6 +37,22 @@
 	/**
 	 * Private Methods
 	 */
+
+	/**
+	 * Initialize every PDF viewer canvas currently in the DOM.
+	 *
+	 * @param {string|number} [formId] Limit to canvases for one form.
+	 * @returns void
+	 */
+	function initViewers( formId ) {
+		var selector = '.epdf-container canvas.epdf';
+		if ( formId ) {
+			selector += '[data-form="' + formId + '"]';
+		}
+		document.querySelectorAll( selector ).forEach( function( el ) {
+			epdfGf.loadPreview( el.dataset.field, el.dataset.form );
+		});
+	}
 
 	function canvasElement( fieldId, formId ) {
 		return document.querySelector( '.epdf-container canvas.epdf#field_' + formId + '_' + fieldId + '_embed_pdf_gravityforms' );

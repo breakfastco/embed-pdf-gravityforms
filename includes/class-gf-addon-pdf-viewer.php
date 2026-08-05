@@ -287,7 +287,7 @@ if ( class_exists( 'GFAddOn' ) ) {
 					'handle'  => 'epdf_gf_pdf_viewer',
 					'src'     => plugins_url( "js/field-pdf-viewer{$min}.js", EMBED_PDF_GRAVITYFORMS_PATH ),
 					'version' => $this->_version,
-					'deps'    => array( 'epdf_gf_pdfjs', 'wp-i18n' ),
+					'deps'    => array( 'jquery', 'epdf_gf_pdfjs', 'wp-i18n' ),
 					'strings' => array(
 						'field_type'   => self::FIELD_TYPE,
 						'script_debug' => defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG,
