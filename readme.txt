@@ -3,9 +3,9 @@
 Contributors: salzano
 Tags: gravityforms, gravity forms, pdf, inkless
 Requires at least: 4.0
-Tested up to: 7.0
+Tested up to: 7.0.2
 Requires PHP: 5.6
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
  
@@ -54,6 +54,13 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 
 == Changelog ==
+
+= 1.1.6 =
+* [Fixed] Updates pdf.js to 6.2.108.
+* [Fixed] Reinitializes viewers on AJAX-enabled forms after HTML is replaced. Viewers on pages greater than one were broken when Gravity Forms AJAX feature was enabled.
+* [Fixed] Adds type="button" to the previous, next, zoom out, and zoom in buttons on the viewer. The lack of these attributes prevented a user from using the enter key in another field to submit the form/page.
+* [Changed] Loads pdf.js as an ES module.
+* [Changed] Bumps tested up to version to 7.0.2.
 
 = 1.1.5 =
 * [Fixed] Ensure user can upload files before downloading a file from a link they provide in the form editor. Ensure the file user provided to download is of an allowed mime type.
@@ -105,6 +112,9 @@ Please create an [Issue on Github](https://github.com/breakfastco/embed-pdf-grav
 
 
 == Upgrade Notice ==
+
+= 1.1.6 =
+Updates pdf.js to 6.2.108. Fixes viewers on multi-page forms with AJAX enabled. Bumps tested up to version to 7.0.2.
 
 = 1.1.5 =
 Bumps tested up to version to 7.0. Ensure user can upload files before downloading a file from a link they provide in the form editor. Ensure the file user provided to download is of an allowed mime type.
