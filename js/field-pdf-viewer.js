@@ -1,20 +1,14 @@
 (function( epdfGf, undefined ) {
 
-	// Loading, paging, & zooming pdf.js viewers
-	window.addEventListener( 'load', function(e) {
-		// The workerSrc property shall be specified.
-		if ( 'undefined' !== typeof pdfjsLib ) {
-			pdfjsLib.GlobalWorkerOptions.workerSrc = epdf_gf_pdfjs_strings.url_worker;
-			// Dispatch an event after pdfjs is ready.
-			const event = new CustomEvent( 'epdf_gf_pdfjs_worker_set' );
-			window.dispatchEvent(event);
-		}
-	});
-
-	// Spin up script. Initializes all the viewers.
+	// Spin up script. Initializes all the viewers after the ESM bootstrap loads.
 	window.addEventListener( 'epdf_gf_pdfjs_worker_set', function(e) {
 		initViewers();
 	});
+
+	// If the module finished before this classic script registered its listener.
+	if ( 'undefined' !== typeof pdfjsLib ) {
+		initViewers();
+	}
 
 	/**
 	 * Gravity Forms AJAX replaces #gform_wrapper_* HTML on page changes.
@@ -33,6 +27,7 @@
 	 * Private Members
 	 */
 	var pdfDocs = [];
+	var pdfLoadingTasks = [];
 
 	/**
 	 * Private Methods
@@ -85,9 +80,10 @@
 			epdfInstance.height = viewport.height;
 			epdfInstance.width = viewport.width;
 
-			// Render PDF page into canvas context
+			// Render PDF page into canvas context (pdf.js v4+ requires canvas).
 			var renderContext = {
 				canvasContext: epdfInstance.getContext('2d'),
+				canvas: epdfInstance,
 				viewport: viewport
 			};
 			var renderTask = page.render(renderContext);
@@ -175,10 +171,12 @@
 		var vctx = epdfInstance.getContext('2d');
 		// Clear the canvas so we don't layer them.
 		vctx.clearRect(0, 0, epdfInstance.width, epdfInstance.height);
-		// Destroy the pdfDocs so it can't be rendered again.
-		if ( pdfDocs[fieldId]) {
-			pdfDocs[fieldId].destroy();
+		// Destroy the loading task/document so it can't be rendered again.
+		if ( pdfLoadingTasks[fieldId] ) {
+			pdfLoadingTasks[fieldId].destroy();
+			pdfLoadingTasks[fieldId] = null;
 		}
+		pdfDocs[fieldId] = null;
 		// Disable the paging and zoom controls.
 		toggleControlEventListeners( epdfInstance.id, false );
 	}
@@ -216,10 +214,12 @@
 		/**
 		 * Asynchronously downloads PDF.
 		 */
-		pdfjsLib.getDocument({ url: urlEl.value, verbosity: 0 }).promise.then(function(pdfDoc_) {
-			if ( pdfDocs[fieldId]) {
-				pdfDocs[fieldId].destroy();
-			}
+		if ( pdfLoadingTasks[fieldId] ) {
+			pdfLoadingTasks[fieldId].destroy();
+		}
+		var loadingTask = pdfjsLib.getDocument({ url: urlEl.value, verbosity: 0 });
+		pdfLoadingTasks[fieldId] = loadingTask;
+		loadingTask.promise.then(function(pdfDoc_) {
 			pdfDocs[fieldId] = pdfDoc_;
 			document.getElementById( epdfInstance.id + '_page_count').textContent = pdfDocs[fieldId].numPages;
 			pdfDocs[fieldId].currentScaleValue = epdfInstance.dataset.initialScale;
